@@ -3,20 +3,24 @@
 <head>
     <meta charset="utf-8">
     
-    <title>利用hexo和github搭建自己的博客 | 万事屋</title>
+    <title>tcp的三次握手和四次挥手 | 万事屋</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。 参考这篇教程进行博客的搭建。">
-<meta name="keywords" content="博客">
+    <meta name="description" content="三次握手三次握手发生在客户端和服务器建立连接的阶段。流程如下：  客户端向服务器发送一个同步报文SYN i 服务器向客户端响应一个报文SYN j，同时对SYN i进行确认ACK i+1 客户端再向服务器发送一个确认报文ACK j+1如下图：为什么需要三次握手防止已经失效的连接请求突然又传到服务器，因而产生错误。假设客户端向服务器发送第一个连接请求，但这个请求丢失了，服务器没有接收到，于是客户端向服">
+<meta name="keywords" content="网络编程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="利用hexo和github搭建自己的博客">
-<meta property="og:url" content="http://yoursite.com/2018/02/07/利用hexo和github搭建自己的博客/index.html">
+<meta property="og:title" content="tcp的三次握手和四次挥手">
+<meta property="og:url" content="http://yoursite.com/2018/02/25/tcp的三次握手和四次挥手/index.html">
 <meta property="og:site_name" content="万事屋">
-<meta property="og:description" content="Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。 参考这篇教程进行博客的搭建。">
+<meta property="og:description" content="三次握手三次握手发生在客户端和服务器建立连接的阶段。流程如下：  客户端向服务器发送一个同步报文SYN i 服务器向客户端响应一个报文SYN j，同时对SYN i进行确认ACK i+1 客户端再向服务器发送一个确认报文ACK j+1如下图：为什么需要三次握手防止已经失效的连接请求突然又传到服务器，因而产生错误。假设客户端向服务器发送第一个连接请求，但这个请求丢失了，服务器没有接收到，于是客户端向服">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-02-08T06:10:44.963Z">
+<meta property="og:image" content="http://n1.cmsfile.pg0.cn/group1/M00/1A/7E/Cgqg2FZAQK-AKig6AAB4dr6gkoY992.jpg">
+<meta property="og:image" content="http://cimage.tianjimedia.com/uploadImages/20151109135259104003.jpg">
+<meta property="og:image" content="http://www.cnitblog.com/images/cnitblog_com/wildon/544465b00200001s.png">
+<meta property="og:updated_time" content="2018-03-05T13:21:36.527Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="利用hexo和github搭建自己的博客">
-<meta name="twitter:description" content="Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。 参考这篇教程进行博客的搭建。">
+<meta name="twitter:title" content="tcp的三次握手和四次挥手">
+<meta name="twitter:description" content="三次握手三次握手发生在客户端和服务器建立连接的阶段。流程如下：  客户端向服务器发送一个同步报文SYN i 服务器向客户端响应一个报文SYN j，同时对SYN i进行确认ACK i+1 客户端再向服务器发送一个确认报文ACK j+1如下图：为什么需要三次握手防止已经失效的连接请求突然又传到服务器，因而产生错误。假设客户端向服务器发送第一个连接请求，但这个请求丢失了，服务器没有接收到，于是客户端向服">
+<meta name="twitter:image" content="http://n1.cmsfile.pg0.cn/group1/M00/1A/7E/Cgqg2FZAQK-AKig6AAB4dr6gkoY992.jpg">
     
 
     
@@ -185,7 +189,7 @@
 </aside>
 
             
-            <section id="main"><article id="post-利用hexo和github搭建自己的博客" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-tcp的三次握手和四次挥手" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -193,7 +197,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            利用hexo和github搭建自己的博客
+            tcp的三次握手和四次挥手
         </h1>
     
 
@@ -202,8 +206,8 @@
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/02/07/利用hexo和github搭建自己的博客/">
-            <time datetime="2018-02-08T05:40:06.000Z" itemprop="datePublished">2018-02-07</time>
+        <a href="/2018/02/25/tcp的三次握手和四次挥手/">
+            <time datetime="2018-02-26T06:36:18.000Z" itemprop="datePublished">2018-02-25</time>
         </a>
     </div>
 
@@ -212,7 +216,7 @@
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/博客/">博客</a>
+        <a class="tag-link" href="/tags/网络编程/">网络编程</a>
     </div>
 
                     </div>
@@ -223,8 +227,22 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。</p>
-<p>参考这篇<a href="https://mhcoderwl.github.io/2017/02/26/%E5%88%A9%E7%94%A8hexo%E5%92%8Cgithub-page-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" target="_blank" rel="noopener">教程</a>进行博客的搭建。</p>
+            <h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p>三次握手发生在客户端和服务器建立连接的阶段。流程如下：</p>
+<ul>
+<li>客户端向服务器发送一个同步报文SYN i</li>
+<li>服务器向客户端响应一个报文SYN j，同时对SYN i进行确认ACK i+1</li>
+<li>客户端再向服务器发送一个确认报文ACK j+1<br>如下图：<br><img src="http://n1.cmsfile.pg0.cn/group1/M00/1A/7E/Cgqg2FZAQK-AKig6AAB4dr6gkoY992.jpg" alt="tcp3"><h4 id="为什么需要三次握手"><a href="#为什么需要三次握手" class="headerlink" title="为什么需要三次握手"></a>为什么需要三次握手</h4>防止已经失效的连接请求突然又传到服务器，因而产生错误。假设客户端向服务器发送第一个连接请求，但这个请求丢失了，服务器没有接收到，于是客户端向服务器发送第二个连接请求，这次正常建立了连接，交换完数据后关闭连接，而此时第一个丢失的连接请求又到达了服务器，服务器以为是客户端又重新发起了连接，于是向客户端发送响应报文，如果只有前两次握手，则服务器不等客户端回应就建立连接，等待客户端的数据，而这次连接是之前失效的连接，并不是客户端发起的连接，因而客户端也就没有数据传输，服务器就一直等待客户端，造成了服务器资源的浪费。若采用三次握手即可解决此问题，服务器要接收到客户端的第三次握手才会建立连接，而此次连接是无效的，因此客户端不会向服务器发起第三次握手，因此连接不会建立。</li>
+</ul>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p>四次挥手发生在客户端和服务器关闭连接的阶段。流程如下：</p>
+<ul>
+<li>客户端主动关闭，向服务器发送一个FIN</li>
+<li>服务器接受到FIN，对这个FIN进行确认，发送ACK</li>
+<li>服务器向客户端也发送一个FIN</li>
+<li>客户端对服务器的FIN进行确认<br>如下图：<br><img src="http://cimage.tianjimedia.com/uploadImages/20151109135259104003.jpg" alt="tcp4"><h4 id="为什么需要四次挥手"><a href="#为什么需要四次挥手" class="headerlink" title="为什么需要四次挥手"></a>为什么需要四次挥手</h4>TCP连接是全双工的，数据可以双向传递，因此每个方向必须单独进行关闭。关闭连接时，服务器可能还有数据要发送，不能立即关闭连接，因此先发送一个ACK，等所有数据发送完，再向客户端发送FIN。</li>
+</ul>
+<h3 id="TIME-WAIT状态"><a href="#TIME-WAIT状态" class="headerlink" title="TIME_WAIT状态"></a>TIME_WAIT状态</h3><p>首先发起主动关闭的一方，在发送最后一个ACK之后会进入time_wait的状态，也就说该发送方会保持2MSL时间之后才会回到初始状态。MSL值是数据包在网络中的最大生存时间。产生这种结果使得这个TCP连接在2MSL连接等待期间，定义这个连接的四元组（客户端IP地址和端口，服务端IP地址和端口号）不能被使用。</p>
+<h4 id="为什么需要TIME-WAIT状态"><a href="#为什么需要TIME-WAIT状态" class="headerlink" title="为什么需要TIME_WAIT状态"></a>为什么需要TIME_WAIT状态</h4><p>1、假设客户端最后发送的ACK在网络上丢失，服务器没收到ACK向客户端重新发送FIN，因此客户端必须保持连接以发送ACK确认报文，这保证了TCP连接的可靠关闭。<br>2、假设没有TIME_WAIT状态，一个客户端关闭连接后又有一个新的客户端以相同的ip地址和端口号建立连接，此时在服务器看来，第二个客户端即为第一个客户端，因为TCP协议栈是无法区分前后两条TCP连接的不同的，因此会发生这种现象，前一个客户端发送给服务器的数据和后一个客户端发送的数据产生了混乱，会产生不可预期的后果。因此TIME_WAIT的第二个作用是使旧的数据包在网络上因为过期而消失。</p>
+<p>最后，tcp的状态转移图：<br><img src="http://www.cnitblog.com/images/cnitblog_com/wildon/544465b00200001s.png" alt="tcp"></p>
 
         
         </div>
@@ -235,7 +253,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/02/07/利用hexo和github搭建自己的博客/" data-id="cjee9ax3r0008cljx3e3wmox0" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/02/25/tcp的三次握手和四次挥手/" data-id="cjee9awzi0006cljxfy36rlp6" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -310,15 +328,11 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/02/25/select、poll、epoll的比较/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">上一篇</strong>
-            <div class="article-nav-title">
-                
-                    select、poll、epoll的比较
-                
-            </div>
-        </a>
     
+        <a href="/2018/02/25/select、poll、epoll的比较/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">select、poll、epoll的比较</div>
+        </a>
     
 </nav>
 
