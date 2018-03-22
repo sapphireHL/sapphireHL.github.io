@@ -152,7 +152,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                4
+                8
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -181,6 +181,530 @@
 
             
             <section id="main">
+    <article id="post-编译原理学习笔记（五）代码生成" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/03/17/编译原理学习笔记（五）代码生成/">编译原理学习笔记（五）代码生成</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/03/17/编译原理学习笔记（五）代码生成/">
+            <time datetime="2018-03-17T14:04:17.000Z" itemprop="datePublished">2018-03-17</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><p>后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。<br>有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。<br>资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。<br>指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/" data-id="cjf2l4koy000bugjxs750j7vb" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-编译原理学习笔记（四）语义分析" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/03/16/编译原理学习笔记（四）语义分析/">编译原理学习笔记（四）语义分析</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/03/16/编译原理学习笔记（四）语义分析/">
+            <time datetime="2018-03-17T04:25:54.000Z" itemprop="datePublished">2018-03-16</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="语义分析的任务"><a href="#语义分析的任务" class="headerlink" title="语义分析的任务"></a>语义分析的任务</h3><p>对抽象语法树进行分析，检查有无语义错误，上下文相关属性，如变量使用前是否声明，函数参数是否一致等。<br>需要两个输入，一个是语法树，一个是程序语言的语义。输出为中间代码。</p>
+<h3 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a>实现方法</h3><p>通过类型检查算法和符号表来实现检查。<br>类型检查算法用来检查每个表达式或语句的类型是什么，是否符合规范。</p>
+<h3 id="符号表"><a href="#符号表" class="headerlink" title="符号表"></a>符号表</h3><p>用来存储程序中各个变量的相关信息，如类型，作用域，访问控制信息，是一种key-value结构。<br>节省时间，可以用哈希表，节省空间，可以用红黑树。<br>符号表处理作用域的方法：一是用一张表，进入作用域就插入元素，离开作用域就删除元素，二是用多张表，构成一个栈，进入作用域就插入一张新表，离开就删除栈顶的表。<br>符号表处理名字空间的方法：引入标签，标号来区别不同类型。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/03/16/编译原理学习笔记（四）语义分析/" data-id="cjf2l4koo0008ugjxhgu7jsaj" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-编译原理学习笔记（三）语法分析" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/03/14/编译原理学习笔记（三）语法分析/">编译原理学习笔记（三）语法分析</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/03/14/编译原理学习笔记（三）语法分析/">
+            <time datetime="2018-03-14T10:29:28.000Z" itemprop="datePublished">2018-03-14</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="语法分析的任务"><a href="#语法分析的任务" class="headerlink" title="语法分析的任务"></a>语法分析的任务</h3><p>语法分析接受词法分析产生的记号流，对其进行分析，检查有无语法错误，有错误返回错误信息，无错误则生成抽象语法树。</p>
+<p>语法分析还需要知道一组语法规则，利用这些规则来判断输入的记号流有无语法错误。</p>
+<h3 id="语法分析实现方式"><a href="#语法分析实现方式" class="headerlink" title="语法分析实现方式"></a>语法分析实现方式</h3><p>语法规则用上下文无关文法来描述。</p>
+<p>分析过程分为两类，自顶向下分析，自底向上分析。</p>
+<h3 id="自顶向下分析"><a href="#自顶向下分析" class="headerlink" title="自顶向下分析"></a>自顶向下分析</h3><p>有分析树，递归下降法和LL（1）分析算法。<br>分析树需要回溯，效率低。而递归下降和LL分析算法都是线性时间复杂度。</p>
+<p>递归下降的思想是每个非终结符构造一个分析函数，用一个前看符号来指导产生式规则的选择。<br>根据FIRST集和FOLLOW集来构造分析表，避免递归回溯</p>
+<p>LL（1）分析算法的意思是从左向右读入字符，从左推导，采用一个前看符号，是一种基于表驱动的分析算法。</p>
+<h3 id="自底向上分析"><a href="#自底向上分析" class="headerlink" title="自底向上分析"></a>自底向上分析</h3><p>LR分析算法。运行高效，有现成工具能用，如YACC，bison等。<br>LR（0）分析算法，核心思想是移进，归约，利用分析表产生一个逆序的最右推倒。<br>SLR和LR（1）都是对LR（0）的改进算法。</p>
+<h3 id="语法制导翻译"><a href="#语法制导翻译" class="headerlink" title="语法制导翻译"></a>语法制导翻译</h3><p>给每条产生式规则附加一个语义动作，当归约时，就执行这个动作进行计算，到所有的计算完成后，就可以得到结果。</p>
+<h3 id="抽象语法树"><a href="#抽象语法树" class="headerlink" title="抽象语法树"></a>抽象语法树</h3><p>与分析树非常类似，去除了无用的节点，是语法分析的最后一个过程，分析完毕后输出一个抽象语法树。<br>抽象语法树的数据结构和树类似，可以手工编码或者自动生成。</p>
+<p>自动生成的方法是在语法制导翻译时，语义动作就定义为语法树的构造函数，自底向上地构造树。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/03/14/编译原理学习笔记（三）语法分析/" data-id="cjf2l4koj0007ugjxn1m3hxar" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-编译原理学习笔记（二）词法分析" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/03/12/编译原理学习笔记（二）词法分析/">编译原理学习笔记（二）词法分析</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/03/12/编译原理学习笔记（二）词法分析/">
+            <time datetime="2018-03-12T14:22:04.000Z" itemprop="datePublished">2018-03-12</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="词法分析的任务"><a href="#词法分析的任务" class="headerlink" title="词法分析的任务"></a>词法分析的任务</h3><p>词法分析是编译器中第一个模块，接收用户的输入（高级语言的源代码），生成一种内部的数据结构（记号流），交给下一个模块语法分析进行处理。</p>
+<p>源代码被看成是字符流，词法分析分析这些字符，产生记号流，记号流是编译器内部定义的一种数据结构。</p>
+<h3 id="词法分析的实现方式"><a href="#词法分析的实现方式" class="headerlink" title="词法分析的实现方式"></a>词法分析的实现方式</h3><p>分为手工编码和自动生成方式。<br>手工编码即为整个分析器都自己手动编写，由于细节很多，实现起来较为复杂。<br>自动生成方式为通过词法分析器的生成器来自动生成词法分析的代码。代码量比手工编码小，但不容易控制细节。</p>
+<h3 id="自动生成"><a href="#自动生成" class="headerlink" title="自动生成"></a>自动生成</h3><p>在自动生成的方式下，只需要输入一些声明式的规范，然后经过自动生成器，就可以产生词法分析器的代码。</p>
+<p>声明式的规范使用正则表达式来描述。</p>
+<p>词法分析器的代码使用有限状态自动机。分为确定有限状态自动机（DFA）和不确定有限状态自动机（NFA）。</p>
+<p>整个流程是从正则表达式转化为NFA，NFA转化为DFA，DFA最小化，最后生成词法分析器的代码。</p>
+<ul>
+<li>正则表达式–&gt;NFA：Thompson算法</li>
+<li>NFA–&gt;DFA：子集构造算法</li>
+<li>DFA最小化：Hopcroft算法</li>
+<li>DFA–&gt;词法分析器代码：转移表、哈希表、跳转表</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/03/12/编译原理学习笔记（二）词法分析/" data-id="cjf2l4ko80005ugjx0xgonncu" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-编译原理学习笔记（一）" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -242,7 +766,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/11/编译原理学习笔记（一）/" data-id="cjemt09kz000179jxmoj5suee" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/03/11/编译原理学习笔记（一）/" data-id="cjf2l4kpf000fugjxc3qs559e" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -382,7 +906,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/02/25/tcp的三次握手和四次挥手/" data-id="cjemt09kc000079jxbvlqyeri" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/02/25/tcp的三次握手和四次挥手/" data-id="cjf2l4klf0000ugjxyfv7z1o4" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -516,7 +1040,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/02/25/select、poll、epoll的比较/" data-id="cjemt09ow000979jxwhy0aj71" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/02/25/select、poll、epoll的比较/" data-id="cjf2l4kmg0002ugjx34kzfdpe" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -642,7 +1166,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/02/07/利用hexo和github搭建自己的博客/" data-id="cjemt09os000879jxz6c6kj29" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/02/07/利用hexo和github搭建自己的博客/" data-id="cjf2l4kp7000cugjxf7tleqkd" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -732,35 +1256,44 @@
                         
                         <div class="item-inner">
                             <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/03/17/编译原理学习笔记（五）代码生成/" class="title">编译原理学习笔记（五）代码生成</a></p>
+                            <p class="item-date"><time datetime="2018-03-17T14:04:17.000Z" itemprop="datePublished">2018-03-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/03/16/编译原理学习笔记（四）语义分析/" class="title">编译原理学习笔记（四）语义分析</a></p>
+                            <p class="item-date"><time datetime="2018-03-17T04:25:54.000Z" itemprop="datePublished">2018-03-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/03/14/编译原理学习笔记（三）语法分析/" class="title">编译原理学习笔记（三）语法分析</a></p>
+                            <p class="item-date"><time datetime="2018-03-14T10:29:28.000Z" itemprop="datePublished">2018-03-14</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/03/12/编译原理学习笔记（二）词法分析/" class="title">编译原理学习笔记（二）词法分析</a></p>
+                            <p class="item-date"><time datetime="2018-03-12T14:22:04.000Z" itemprop="datePublished">2018-03-12</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
                             <p class="item-title"><a href="/2018/03/11/编译原理学习笔记（一）/" class="title">编译原理学习笔记（一）概述</a></p>
                             <p class="item-date"><time datetime="2018-03-11T13:43:40.000Z" itemprop="datePublished">2018-03-11</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/02/25/tcp的三次握手和四次挥手/" class="title">tcp的三次握手和四次挥手</a></p>
-                            <p class="item-date"><time datetime="2018-02-26T06:36:18.000Z" itemprop="datePublished">2018-02-25</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/02/25/select、poll、epoll的比较/" class="title">select、poll、epoll的比较</a></p>
-                            <p class="item-date"><time datetime="2018-02-26T06:35:14.000Z" itemprop="datePublished">2018-02-25</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/02/07/利用hexo和github搭建自己的博客/" class="title">利用hexo和github搭建自己的博客</a></p>
-                            <p class="item-date"><time datetime="2018-02-08T05:40:06.000Z" itemprop="datePublished">2018-02-07</time></p>
                         </div>
                     </li>
                 
@@ -775,7 +1308,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">3</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">3</span></li></ul>
         </div>
     </div>
 
@@ -784,7 +1317,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译原理/">编译原理</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络编程/">网络编程</a><span class="tag-list-count">2</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译原理/">编译原理</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络编程/">网络编程</a><span class="tag-list-count">2</span></li></ul>
         </div>
     </div>
 
