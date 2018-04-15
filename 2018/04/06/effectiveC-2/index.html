@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>读书笔记 Effective C++(2) | 万事屋</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="13、以对象管理资源将动态分配的资源放进一个资源管理类中，构造函数中获得资源（RAII），析构函数保证了这些资源的释放。常用的有shared_ptr和auto_ptr，前者常用，后者复制时会把被复制的指针置为null，一块内存只能有一个auto_ptr指向它。 14、在资源类中小心copying行为考虑下面这么一个管理互斥锁的类：123456789class Lock&amp;#123;public:	e">
+<meta name="keywords" content="读书笔记,C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记 Effective C++(2)">
+<meta property="og:url" content="http://yoursite.com/2018/04/06/effectiveC-2/index.html">
+<meta property="og:site_name" content="万事屋">
+<meta property="og:description" content="13、以对象管理资源将动态分配的资源放进一个资源管理类中，构造函数中获得资源（RAII），析构函数保证了这些资源的释放。常用的有shared_ptr和auto_ptr，前者常用，后者复制时会把被复制的指针置为null，一块内存只能有一个auto_ptr指向它。 14、在资源类中小心copying行为考虑下面这么一个管理互斥锁的类：123456789class Lock&amp;#123;public:	e">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-04-07T12:43:47.347Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读书笔记 Effective C++(2)">
+<meta name="twitter:description" content="13、以对象管理资源将动态分配的资源放进一个资源管理类中，构造函数中获得资源（RAII），析构函数保证了这些资源的释放。常用的有shared_ptr和auto_ptr，前者常用，后者复制时会把被复制的指针置为null，一块内存只能有一个auto_ptr指向它。 14、在资源类中小心copying行为考虑下面这么一个管理互斥锁的类：123456789class Lock&amp;#123;public:	e">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">万事屋</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/me.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/me.png" />
+            <h2 id="name">sapphireHL</h2>
+            <h3 id="title">Programer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Nanjing, China</span>
+            <a id="follow" target="_blank" href="https://github.com/sapphireHL">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                12
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                5
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/sapphireHL" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-effectiveC-2" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            读书笔记 Effective C++(2)
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/04/06/effectiveC-2/">
+            <time datetime="2018-04-07T03:16:59.000Z" itemprop="datePublished">2018-04-06</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/C/">C++</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="13、以对象管理资源"><a href="#13、以对象管理资源" class="headerlink" title="13、以对象管理资源"></a>13、以对象管理资源</h2><p>将动态分配的资源放进一个资源管理类中，构造函数中获得资源（RAII），析构函数保证了这些资源的释放。<br>常用的有shared_ptr和auto_ptr，前者常用，后者复制时会把被复制的指针置为null，一块内存只能有一个auto_ptr指向它。</p>
+<h2 id="14、在资源类中小心copying行为"><a href="#14、在资源类中小心copying行为" class="headerlink" title="14、在资源类中小心copying行为"></a>14、在资源类中小心copying行为</h2><p>考虑下面这么一个管理互斥锁的类：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lock</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	explicit Lock(Mutex* pm): mutexPtr(pm)&#123;</span><br><span class="line">		lock(mutexPtr);<span class="comment">//获得资源</span></span><br><span class="line">	&#125;</span><br><span class="line">	~Lock()&#123;</span><br><span class="line">		unlock(mutexPtr);<span class="comment">//释放资源</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当Lock类复制时，大多数时候可以有两种选择，第一个是禁止复制：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lock</span>： <span class="title">private</span> <span class="title">Uncopyable</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第二种是用引用计数法来管理复制，复制时，引用加1，当引用为0时，释放资源，使用shared_ptr还可以定制自己的删除器，因为有时候并不希望释放资源，像Lock，析构的时候不释放资源，只是解锁。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lock</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	explicit Lock(Mutex* pm): mutexPtr(pm, unlock)//指定删除器unlock</span><br><span class="line">	&#123;</span><br><span class="line">		lock(mutexPtr.get());</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="built_in">shared_ptr</span>&lt;Mutex&gt; mutexPtr;<span class="comment">//不再需要析构函数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="15、在资源管理类中提供对原始资源的访问"><a href="#15、在资源管理类中提供对原始资源的访问" class="headerlink" title="15、在资源管理类中提供对原始资源的访问"></a>15、在资源管理类中提供对原始资源的访问</h2><p>有些API需要对原始资源进行访问而不是资源管理类，故资源管理类应该提供办法对原始资源进行访问。<br>有显示转换和隐式转换两种办法。显示转换专门定义一个返回原始资源的函数，例如shared_ptr提供get函数返回原始指针。<br>隐式转换则是直接将资源管理类转换成原始资源类型，如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Font</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line">	<span class="comment">//隐式转换，Font转换为FontHandle</span></span><br><span class="line">	<span class="function"><span class="keyword">operator</span> <span class="title">FontHandle</span><span class="params">()</span> <span class="keyword">const</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> f;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	FontHandle f;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>隐式转换对用户来说很方便，但可能会产生一些问题，显示转换比较安全。</p>
+<h2 id="16、成对使用new和delete时要采取相同形式"><a href="#16、成对使用new和delete时要采取相同形式" class="headerlink" title="16、成对使用new和delete时要采取相同形式"></a>16、成对使用new和delete时要采取相同形式</h2><p>new和delete搭配，new[]和delete[]搭配，最好不要对数组做typedef。</p>
+<h2 id="17、以独立语句将newed对象置入智能指针"><a href="#17、以独立语句将newed对象置入智能指针" class="headerlink" title="17、以独立语句将newed对象置入智能指针"></a>17、以独立语句将newed对象置入智能指针</h2><p>以单独一条语句将new出来的对象放到智能指针中去。如果不这么做，一旦有异常抛出，可能会导致难以察觉的资源泄漏。</p>
+<h2 id="18、让接口容易被正确使用，不易被误用"><a href="#18、让接口容易被正确使用，不易被误用" class="headerlink" title="18、让接口容易被正确使用，不易被误用"></a>18、让接口容易被正确使用，不易被误用</h2><p>让接口正确使用的方法包括接口的一致性，与内置类型的行为兼容。<br>阻止误用的方法包括建立新类型、限制类型上的操作，束缚对象值，以及消除客户的资源管理责任。<br>shared_ptr支持定制删除器，可以防范DLL问题（即在一个DLL里创建在另一个DLL里释放），可以用来包装互斥锁，实现自动解锁。</p>
+<h2 id="19、设计class犹如设计type"><a href="#19、设计class犹如设计type" class="headerlink" title="19、设计class犹如设计type"></a>19、设计class犹如设计type</h2><p>设计class就是设计一个新type，要考虑方方面面的问题。</p>
+<h2 id="20、宁可以pass-by-reference-to-const替换pass-by-value"><a href="#20、宁可以pass-by-reference-to-const替换pass-by-value" class="headerlink" title="20、宁可以pass by reference to const替换pass by value"></a>20、宁可以pass by reference to const替换pass by value</h2><p>对一个类对象传值意味着复制，会调用拷贝构造函数和析构函数，造成了不必要的时间消耗，而传引用则不会调用拷贝构造函数，更高效，如果函数对传入的参数不进行改变，应该加上const。<br>对于内置类型和STL的迭代器和函数对象，传值比较适合。</p>
+<h2 id="21、必须返回对象时，别妄想返回其reference"><a href="#21、必须返回对象时，别妄想返回其reference" class="headerlink" title="21、必须返回对象时，别妄想返回其reference"></a>21、必须返回对象时，别妄想返回其reference</h2><p>不要返回对一个局部对象的引用，在函数结束后该对象被释放，引用变成不合法的。<br>同样不要在函数内返回一个newed对象的引用，因为delete得不到保障。<br>也不要返回对一个static对象的引用，如果同时需要多个这样的对象，会出问题。<br>指针同理。</p>
+<h2 id="22、将成员变量声明为private"><a href="#22、将成员变量声明为private" class="headerlink" title="22、将成员变量声明为private"></a>22、将成员变量声明为private</h2><p>为了封装性，将成员变量声明为private，这可以赋予客户端访问数据的一致性、可以细微划分成员的访问控制（可读可写）、允许约束条件获得保证，并提供class作者充分的实现弹性。<br>protect的封装性不比public好，因为派生类可以访问protect成员。</p>
+<h2 id="23、宁以non-member、non-friend替换member函数"><a href="#23、宁以non-member、non-friend替换member函数" class="headerlink" title="23、宁以non-member、non-friend替换member函数"></a>23、宁以non-member、non-friend替换member函数</h2><p>这样做可以增加封装性、包裹弹性和机能扩充性。</p>
+<h2 id="24、若所有参数皆需要类型转换，请为此采用non-member函数"><a href="#24、若所有参数皆需要类型转换，请为此采用non-member函数" class="headerlink" title="24、若所有参数皆需要类型转换，请为此采用non-member函数"></a>24、若所有参数皆需要类型转换，请为此采用non-member函数</h2><p>如果一个函数需要对所有参数进行类型转换，它必须是non-member的，因此调用端不能进行类型转换。如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rational</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Rational(<span class="keyword">int</span> numerator = <span class="number">0</span>, <span class="keyword">int</span> denominator = <span class="number">1</span>); <span class="comment">//无explicit，允许隐式转换</span></span><br><span class="line">	<span class="keyword">const</span> Rational <span class="keyword">operator</span>*(<span class="keyword">const</span> Rational&amp; rhs) <span class="keyword">const</span>;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line">Rational onehalf = Rational(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">Rational result;</span><br><span class="line">result = onehalf * <span class="number">2</span>;  <span class="comment">//正确，2进行了隐式转换</span></span><br><span class="line">result = <span class="number">2</span> * onehalf; <span class="comment">//错误，相当于2.operator*(onehalf),2不是Rational类型！</span></span><br></pre></td></tr></table></figure></p>
+<p>解决方法就是将该函数声明为non-meber的：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Rational <span class="keyword">operator</span>*(<span class="keyword">const</span> Rational&amp; lhs, <span class="keyword">const</span> Rational&amp; rhs) <span class="keyword">const</span>;</span><br><span class="line"></span><br><span class="line">Rational onehalf = Rational(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">Rational result;</span><br><span class="line">result = onehalf * <span class="number">2</span>;  <span class="comment">//正确，2进行了隐式转换</span></span><br><span class="line">result = <span class="number">2</span> * onehalf;  <span class="comment">//正确！</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="25、考虑写一个不抛出异常的swap函数"><a href="#25、考虑写一个不抛出异常的swap函数" class="headerlink" title="25、考虑写一个不抛出异常的swap函数"></a>25、考虑写一个不抛出异常的swap函数</h2><p>当std的swap对一个类型效率不高时，提供一个swap成员函数，且这个成员函数不应该抛出异常，往往这个类承担一种指针的角色，指向真正的实现类（pimpl），swap只需要互换指针而不需要互换数据。<br>如果提供一个成员函数，也该提供一个非成员函数来调用成员函数，对于class，也请特化std的swap。<br>调用swap时先声明using std::swap然后再调用，且调用不包含任何的命名空间的修饰。<br>不要在std里加入新东西。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> WidgetStuff&#123;</span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">Widget</span>&#123;</span></span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		WidgetImpl* pImpl;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		...</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(Widget&amp; other)</span></span>&#123;</span><br><span class="line">			<span class="keyword">using</span> <span class="built_in">std</span>::swap;</span><br><span class="line">			swap(pImpl, other.pImpl);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(Widget&amp; a, Widget&amp; b)</span></span>&#123;</span><br><span class="line">		a.swap(b);<span class="comment">//调用成员函数</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/04/06/effectiveC-2/" data-id="cjg0trt9t00031tjxy3rz0ufl" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/04/07/effective3/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    读书笔记 Effective C++(3)
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/04/06/读书笔记-Effective-C/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">读书笔记 Effective C++</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/04/15/effective4/" class="title">读书笔记 Effective C++(4)</a></p>
+                            <p class="item-date"><time datetime="2018-04-15T13:06:19.000Z" itemprop="datePublished">2018-04-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/04/07/effective3/" class="title">读书笔记 Effective C++(3)</a></p>
+                            <p class="item-date"><time datetime="2018-04-07T12:34:53.000Z" itemprop="datePublished">2018-04-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/04/06/effectiveC-2/" class="title">读书笔记 Effective C++(2)</a></p>
+                            <p class="item-date"><time datetime="2018-04-07T03:16:59.000Z" itemprop="datePublished">2018-04-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/04/06/读书笔记-Effective-C/" class="title">读书笔记 Effective C++</a></p>
+                            <p class="item-date"><time datetime="2018-04-06T08:56:42.000Z" itemprop="datePublished">2018-04-06</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/03/17/编译原理学习笔记（五）代码生成/" class="title">编译原理学习笔记（五）代码生成</a></p>
+                            <p class="item-date"><time datetime="2018-03-17T14:04:17.000Z" itemprop="datePublished">2018-03-17</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">3</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译原理/">编译原理</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络编程/">网络编程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a><span class="tag-list-count">4</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 sapphireHL<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

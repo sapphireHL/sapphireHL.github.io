@@ -3,20 +3,20 @@
 <head>
     <meta charset="utf-8">
     
-    <title>编译原理学习笔记（五）代码生成 | 万事屋</title>
+    <title>读书笔记 Effective C++(3) | 万事屋</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
-<meta name="keywords" content="编译原理">
+    <meta name="description" content="26、尽可能延后变量定义式的出现时间这样做可以增加程序的清晰度并改善程序效率。如果程序异常提前退出而变量定义在前，则该变量不会被使用但是还是付出了构造和析构的成本，因此将变量定义延后直到使用变量之前，甚至延后到能给予初值之前，这样可以避免无意义的default构造函数。 27、尽量少做转型动作尽量避免转型，特别是避免dynamic_cast，其运行速度很慢，如果某个设计需要转型动作，试着找一些替代">
+<meta name="keywords" content="读书笔记,C++">
 <meta property="og:type" content="article">
-<meta property="og:title" content="编译原理学习笔记（五）代码生成">
-<meta property="og:url" content="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/index.html">
+<meta property="og:title" content="读书笔记 Effective C++(3)">
+<meta property="og:url" content="http://yoursite.com/2018/04/07/effective3/index.html">
 <meta property="og:site_name" content="万事屋">
-<meta property="og:description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
+<meta property="og:description" content="26、尽可能延后变量定义式的出现时间这样做可以增加程序的清晰度并改善程序效率。如果程序异常提前退出而变量定义在前，则该变量不会被使用但是还是付出了构造和析构的成本，因此将变量定义延后直到使用变量之前，甚至延后到能给予初值之前，这样可以避免无意义的default构造函数。 27、尽量少做转型动作尽量避免转型，特别是避免dynamic_cast，其运行速度很慢，如果某个设计需要转型动作，试着找一些替代">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-03-17T14:16:58.392Z">
+<meta property="og:updated_time" content="2018-04-15T13:07:17.634Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="编译原理学习笔记（五）代码生成">
-<meta name="twitter:description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
+<meta name="twitter:title" content="读书笔记 Effective C++(3)">
+<meta name="twitter:description" content="26、尽可能延后变量定义式的出现时间这样做可以增加程序的清晰度并改善程序效率。如果程序异常提前退出而变量定义在前，则该变量不会被使用但是还是付出了构造和析构的成本，因此将变量定义延后直到使用变量之前，甚至延后到能给予初值之前，这样可以避免无意义的default构造函数。 27、尽量少做转型动作尽量避免转型，特别是避免dynamic_cast，其运行速度很慢，如果某个设计需要转型动作，试着找一些替代">
     
 
     
@@ -185,7 +185,7 @@
 </aside>
 
             
-            <section id="main"><article id="post-编译原理学习笔记（五）代码生成" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-effective3" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -193,7 +193,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            编译原理学习笔记（五）代码生成
+            读书笔记 Effective C++(3)
         </h1>
     
 
@@ -202,8 +202,8 @@
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/03/17/编译原理学习笔记（五）代码生成/">
-            <time datetime="2018-03-17T14:04:17.000Z" itemprop="datePublished">2018-03-17</time>
+        <a href="/2018/04/07/effective3/">
+            <time datetime="2018-04-07T12:34:53.000Z" itemprop="datePublished">2018-04-07</time>
         </a>
     </div>
 
@@ -212,7 +212,7 @@
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
+        <a class="tag-link" href="/tags/C/">C++</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
     </div>
 
                     </div>
@@ -223,7 +223,40 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><p>后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。<br>有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。<br>资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。<br>指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。</p>
+            <h2 id="26、尽可能延后变量定义式的出现时间"><a href="#26、尽可能延后变量定义式的出现时间" class="headerlink" title="26、尽可能延后变量定义式的出现时间"></a>26、尽可能延后变量定义式的出现时间</h2><p>这样做可以增加程序的清晰度并改善程序效率。如果程序异常提前退出而变量定义在前，则该变量不会被使用但是还是付出了构造和析构的成本，因此将变量定义延后直到使用变量之前，甚至延后到能给予初值之前，这样可以避免无意义的default构造函数。</p>
+<h2 id="27、尽量少做转型动作"><a href="#27、尽量少做转型动作" class="headerlink" title="27、尽量少做转型动作"></a>27、尽量少做转型动作</h2><p>尽量避免转型，特别是避免dynamic_cast，其运行速度很慢，如果某个设计需要转型动作，试着找一些替代做法，如virtual函数，如果转型是必要的，将其隐藏于某个函数里。<br>使用C++新式转型不要用旧式转型，前者很容易识别出来。</p>
+<h2 id="28、避免返回handles指向对象内部成分"><a href="#28、避免返回handles指向对象内部成分" class="headerlink" title="28、避免返回handles指向对象内部成分"></a>28、避免返回handles指向对象内部成分</h2><p>避免返回handles（指针，引用，迭代器）指向对象内部，一是提升封装性，如果指向private成员，则用户可以修改这些成员，private就没用了，二是帮助const成员函数的行为像一个const，并降低空悬的可能性。</p>
+<h2 id="29、为异常安全努力是值得的"><a href="#29、为异常安全努力是值得的" class="headerlink" title="29、为异常安全努力是值得的"></a>29、为异常安全努力是值得的</h2><p>异常安全函数即使发生异常也不会泄漏资源或允许任何数据结构被破坏，这样的函数分为3种可能，基本型（若异常被抛出，程序内任何事物仍然处于有效状态下，有可能发生改变）、强烈型（要么全变，要么不变）、不抛异常型。</p>
+<p>强烈保证往往能够以copy and swap实现出来，但不一定对所有函数都有实现意义，例如copy的成本太高。</p>
+<p>一个函数提供的异常安全性最高是它所调用的各个函数的安全性的最弱的一个。</p>
+<h2 id="30、透彻了解inlining的里里外外"><a href="#30、透彻了解inlining的里里外外" class="headerlink" title="30、透彻了解inlining的里里外外"></a>30、透彻了解inlining的里里外外</h2><ul>
+<li>inline将每一处调用函数的地方都用函数本体替换，提升运行速度但会导致代码膨胀，因此inline函数适合体积小、调用频繁的函数</li>
+<li>在类内部定义的函数默认是inline的</li>
+<li>inline只是一种申请，实际上到底实施inline还要取决于编译器的决定</li>
+<li>因为inline是编译时决定，而virtual是运行时决定，所以对一个virtual函数inline没有意义。</li>
+<li>如果需要对inline的函数取地址，编译器往往会生成一个no-inline的函数，当用函数指针调用这个函数时，使用的是非inline的版本。</li>
+<li>inline函数往往不利于调试，无法设置断点</li>
+</ul>
+<h2 id="31、将文件间的编译依存关系降至最低"><a href="#31、将文件间的编译依存关系降至最低" class="headerlink" title="31、将文件间的编译依存关系降至最低"></a>31、将文件间的编译依存关系降至最低</h2><p>支持“编译依存性最小化”的一般构想是：相依于声明式，不要相依于定义式，两个手段是Handle class（pimpl）和Interface class（抽象类）。</p>
+<p>程序库头文件应该以“完全且仅有声明式”的形式存在，这种做法不论是否涉及templates都适用。</p>
+<h2 id="32、确定你的public继承塑模出is-a关系"><a href="#32、确定你的public继承塑模出is-a关系" class="headerlink" title="32、确定你的public继承塑模出is-a关系"></a>32、确定你的public继承塑模出is-a关系</h2><p>public继承意味着is-a，对基类适用的所有操作对派生类也适用，因为每个派生类对象也是一个基类对象。</p>
+<h2 id="33、避免遮掩继承而来的名称"><a href="#33、避免遮掩继承而来的名称" class="headerlink" title="33、避免遮掩继承而来的名称"></a>33、避免遮掩继承而来的名称</h2><p>派生类内的名称会遮掩基类内的名称，可以适用using声明来让基类的名称可见，或者使用转交函数，转交函数显式调用基类的函数。</p>
+<h2 id="34、区分接口继承和实现继承"><a href="#34、区分接口继承和实现继承" class="headerlink" title="34、区分接口继承和实现继承"></a>34、区分接口继承和实现继承</h2><p>接口继承和实现继承不同，在public继承下，派生类总是继承基类的接口。</p>
+<p>纯虚函数只具体指定接口继承，派生类必须自己实现。</p>
+<p>虚函数指定接口继承和缺省实现继承，派生类可以选择实现，可以用纯虚函数来实现，基类的纯虚函数定义缺省行为，在派生类的虚函数实现中显式调用基类的纯虚函数。</p>
+<p>非虚函数实现接口继承和强制性实现继承，派生类不应该重新定义。</p>
+<h2 id="35、考虑virtual函数以外的其他选择"><a href="#35、考虑virtual函数以外的其他选择" class="headerlink" title="35、考虑virtual函数以外的其他选择"></a>35、考虑virtual函数以外的其他选择</h2><p>虚函数的替代方案，第一个是NVI（Non-Virtual Interface）手法，是一种Template Method设计模式，定义一个非虚的public函数调用private的虚函数，这个非虚函数成为外覆器，这么做的好处是在虚函数调用前后，还可以做其他的处理，如互斥锁上锁，制造日志等，只用virtual函数无法做到这些。</p>
+<p>第二个是所谓的Strategy模式，用函数指针代替虚函数，创建对象时传递相应的函数指针，这样的好处是对于同一类型可以有不同的表现方法，传递的函数不同表现则不同，有更大的弹性，若对象的表现在运行期会改变，也可以提供一个setMethod函数方便地进行改变，但是这样的函数若需要访问类的私有成员就不得不声明为友元，降低了类的封装性。<br>还可以用function来实现Strategy模式，function可以保存的是所有可以调用的对象，包括函数指针，仿函数，成员函数等，而且也允许兼容，例如返回类型或者参数类型可以隐式转换成所需的类型，这样的函数也可以放进function里面。<br>一种古典的Strategy模式是将体系内的virtual函数替换为另一个继承体系中的virtual函数。</p>
+<h2 id="36、绝不重新定义继承而来的non-virtual函数"><a href="#36、绝不重新定义继承而来的non-virtual函数" class="headerlink" title="36、绝不重新定义继承而来的non-virtual函数"></a>36、绝不重新定义继承而来的non-virtual函数</h2><p>由于静态绑定的原因，当用基类指针调用non-virtual函数时永远是调用基类的，因此不要重新定义继承来的non-virtual函数。</p>
+<h2 id="37、绝不重新定义继承而来的缺省参数值"><a href="#37、绝不重新定义继承而来的缺省参数值" class="headerlink" title="37、绝不重新定义继承而来的缺省参数值"></a>37、绝不重新定义继承而来的缺省参数值</h2><p>缺省参数值是静态绑定，而虚函数是动态绑定，当缺省参数不同时，基类指针只会调用基类的缺省参数不会用派生类的。</p>
+<h2 id="38、通过复合塑模出has-a或者“根据某物实现出”"><a href="#38、通过复合塑模出has-a或者“根据某物实现出”" class="headerlink" title="38、通过复合塑模出has-a或者“根据某物实现出”"></a>38、通过复合塑模出has-a或者“根据某物实现出”</h2><p>public继承是is-a，而在类里定义另一个类的对象则是has-a或者is-implemented-in-terms-of a（由a实现出）。</p>
+<h2 id="39、明智而审慎地使用private继承"><a href="#39、明智而审慎地使用private继承" class="headerlink" title="39、明智而审慎地使用private继承"></a>39、明智而审慎地使用private继承</h2><p>private继承是一种is-implemented-in-terms-of，private继承的派生类对象不会被转为基类对象，类似于复合，根据某物实现出，<strong>尽可能使用复合</strong>而不是private继承，当需要访问protected成员和virtual函数时，使用private继承。</p>
+<p>private继承可以利用empty base最优化：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Empty</span>&#123;</span>&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HoldInt</span>&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">int</span> x;</span><br><span class="line">	Empty e;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面这个复合的例子，空的类的size并不是0，编译器往往会放入一个char，size往往是1，因此HoldInt的size加上对齐达到了8，而使用private继承就不会有这种问题：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Empty</span>&#123;</span>&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HoldInt</span> :</span> <span class="keyword">private</span> Empty&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">int</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这时HoldInt的size就为一个int的大小。</p>
+<h2 id="40、明智而审慎地使用多重继承"><a href="#40、明智而审慎地使用多重继承" class="headerlink" title="40、明智而审慎地使用多重继承"></a>40、明智而审慎地使用多重继承</h2><p>多重继承比单继承复杂，可能导致二义性，即两个基类中有同名函数，不知道该调用哪一个，此外如果一个基类在继承路径上出现多次还可能需要虚继承。</p>
+<p>虚继承会增加大小、速度、初始化复杂度等成本，如果虚基类不带任何数据是最具有实用性的情况。</p>
+<p>多重继承的一个用途是，其中一个以public继承某个interface，另一个以private继承某个实现。</p>
 
         
         </div>
@@ -234,7 +267,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/" data-id="cjg0trtay000u1tjxrhducerh" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/04/07/effective3/" data-id="cjg0trt9500001tjx4xl8r4qi" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -309,19 +342,19 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/04/06/读书笔记-Effective-C/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="/2018/04/15/effective4/" id="article-nav-newer" class="article-nav-link-wrap">
             <strong class="article-nav-caption">上一篇</strong>
             <div class="article-nav-title">
                 
-                    读书笔记 Effective C++
+                    读书笔记 Effective C++(4)
                 
             </div>
         </a>
     
     
-        <a href="/2018/03/16/编译原理学习笔记（四）语义分析/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/04/06/effectiveC-2/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">编译原理学习笔记（四）语义分析</div>
+            <div class="article-nav-title">读书笔记 Effective C++(2)</div>
         </a>
     
 </nav>

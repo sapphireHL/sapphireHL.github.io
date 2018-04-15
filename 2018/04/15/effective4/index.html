@@ -3,20 +3,20 @@
 <head>
     <meta charset="utf-8">
     
-    <title>编译原理学习笔记（五）代码生成 | 万事屋</title>
+    <title>读书笔记 Effective C++(4) | 万事屋</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
-<meta name="keywords" content="编译原理">
+    <meta name="description" content="41、了解隐式接口和编译期多态类和模板都支持接口和多态，对类而言，接口是显式的，以函数签名为中心，多态通过虚函数发生于运行期。 对模板参数而言，接口是隐式的，基于有效的表达式，多态通过模板具现化和函数重载解析发生于编译期。 42、了解typename的双重意义作为模板参数，class和typename没有不同，可以互换。 当使用一个内嵌类型时，需要在前面加上typename，编译器才知道它是一个类">
+<meta name="keywords" content="读书笔记,C++">
 <meta property="og:type" content="article">
-<meta property="og:title" content="编译原理学习笔记（五）代码生成">
-<meta property="og:url" content="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/index.html">
+<meta property="og:title" content="读书笔记 Effective C++(4)">
+<meta property="og:url" content="http://yoursite.com/2018/04/15/effective4/index.html">
 <meta property="og:site_name" content="万事屋">
-<meta property="og:description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
+<meta property="og:description" content="41、了解隐式接口和编译期多态类和模板都支持接口和多态，对类而言，接口是显式的，以函数签名为中心，多态通过虚函数发生于运行期。 对模板参数而言，接口是隐式的，基于有效的表达式，多态通过模板具现化和函数重载解析发生于编译期。 42、了解typename的双重意义作为模板参数，class和typename没有不同，可以互换。 当使用一个内嵌类型时，需要在前面加上typename，编译器才知道它是一个类">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-03-17T14:16:58.392Z">
+<meta property="og:updated_time" content="2018-04-15T13:07:14.918Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="编译原理学习笔记（五）代码生成">
-<meta name="twitter:description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
+<meta name="twitter:title" content="读书笔记 Effective C++(4)">
+<meta name="twitter:description" content="41、了解隐式接口和编译期多态类和模板都支持接口和多态，对类而言，接口是显式的，以函数签名为中心，多态通过虚函数发生于运行期。 对模板参数而言，接口是隐式的，基于有效的表达式，多态通过模板具现化和函数重载解析发生于编译期。 42、了解typename的双重意义作为模板参数，class和typename没有不同，可以互换。 当使用一个内嵌类型时，需要在前面加上typename，编译器才知道它是一个类">
     
 
     
@@ -185,7 +185,7 @@
 </aside>
 
             
-            <section id="main"><article id="post-编译原理学习笔记（五）代码生成" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-effective4" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -193,7 +193,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            编译原理学习笔记（五）代码生成
+            读书笔记 Effective C++(4)
         </h1>
     
 
@@ -202,8 +202,8 @@
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/03/17/编译原理学习笔记（五）代码生成/">
-            <time datetime="2018-03-17T14:04:17.000Z" itemprop="datePublished">2018-03-17</time>
+        <a href="/2018/04/15/effective4/">
+            <time datetime="2018-04-15T13:06:19.000Z" itemprop="datePublished">2018-04-15</time>
         </a>
     </div>
 
@@ -212,7 +212,7 @@
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
+        <a class="tag-link" href="/tags/C/">C++</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
     </div>
 
                     </div>
@@ -223,7 +223,35 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><p>后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。<br>有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。<br>资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。<br>指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。</p>
+            <h2 id="41、了解隐式接口和编译期多态"><a href="#41、了解隐式接口和编译期多态" class="headerlink" title="41、了解隐式接口和编译期多态"></a>41、了解隐式接口和编译期多态</h2><p>类和模板都支持接口和多态，对类而言，接口是显式的，以函数签名为中心，多态通过虚函数发生于运行期。</p>
+<p>对模板参数而言，接口是隐式的，基于有效的表达式，多态通过模板具现化和函数重载解析发生于编译期。</p>
+<h2 id="42、了解typename的双重意义"><a href="#42、了解typename的双重意义" class="headerlink" title="42、了解typename的双重意义"></a>42、了解typename的双重意义</h2><p>作为模板参数，class和typename没有不同，可以互换。</p>
+<p>当使用一个内嵌类型时，需要在前面加上typename，编译器才知道它是一个类型而不是成员或者函数。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Sample</span><span class="params">(T t)</span></span>&#123;</span><br><span class="line">	<span class="keyword">typename</span> <span class="built_in">std</span>::iterator_traits&lt;T&gt;::<span class="function">value_type <span class="title">temp</span><span class="params">(T)</span></span>;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="43、学习处理模板化基类内的名称"><a href="#43、学习处理模板化基类内的名称" class="headerlink" title="43、学习处理模板化基类内的名称"></a>43、学习处理模板化基类内的名称</h2><p>因为基类模板可能被特化不提供基类模板的某个函数，所以在派生类里面直接调用模板基类的函数无法通过编译，可以通过this指针和using声明或者基类作用域符号来告诉编译器假定该函数存在。</p>
+<h2 id="44、将与参数无关的代码抽离templates"><a href="#44、将与参数无关的代码抽离templates" class="headerlink" title="44、将与参数无关的代码抽离templates"></a>44、将与参数无关的代码抽离templates</h2><p>模板生成多个类和函数，所以任何模板都不该与某个造成膨胀的模板参数产生相依关系。</p>
+<p>用函数参数或者class成员变量代替模板参数可以消除这种膨胀。</p>
+<p>还可以让具有完全相同的二进制表述的类型共享实现码，也可以减小膨胀，如int和long在一些机器上是一样的，所有指针类型都是一样的。</p>
+<h2 id="45、运用成员函数模板接受所有兼容类型"><a href="#45、运用成员函数模板接受所有兼容类型" class="headerlink" title="45、运用成员函数模板接受所有兼容类型"></a>45、运用成员函数模板接受所有兼容类型</h2><p>泛化构造函数可以使一个类型隐式转换成另一个类型：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">shared_ptr</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line">	<span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">Y</span>&gt;</span></span><br><span class="line"><span class="class">	<span class="title">shared_ptr</span>(<span class="title">shared_ptr</span>&lt;Y&gt; <span class="title">const</span>&amp;);</span> <span class="comment">//泛化构造函数</span></span><br><span class="line"></span><br><span class="line">	templa&lt;<span class="class"><span class="keyword">class</span> <span class="title">Y</span>&gt;</span></span><br><span class="line"><span class="class">	<span class="title">shared_ptr</span>&amp; <span class="title">operator</span>=(<span class="title">shared_ptr</span>&lt;Y&gt; <span class="title">const</span>&amp;);</span> <span class="comment">//泛化赋值函数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>声明了泛化构造函数还是需要声明正常的构造函数和赋值函数。</p>
+<h2 id="46、需要类型转换时请为模板定义非成员函数"><a href="#46、需要类型转换时请为模板定义非成员函数" class="headerlink" title="46、需要类型转换时请为模板定义非成员函数"></a>46、需要类型转换时请为模板定义非成员函数</h2><p>当提供与模板相关的包含参数隐式转换的函数时，将函数定义为friend并在类内实现。</p>
+<h2 id="47、请使用traits-classes表现类型信息"><a href="#47、请使用traits-classes表现类型信息" class="headerlink" title="47、请使用traits classes表现类型信息"></a>47、请使用traits classes表现类型信息</h2><p>traits classes，特性萃取，使得类型相关信息在编译期可用，以template内嵌typedef和偏特化实现。</p>
+<p>如何使用traits？</p>
+<ul>
+<li>建立一组重载函数，最后一个参数是traits的类型参数，对于不同的类型做实现。</li>
+<li>另外建立一个控制函数调用上述函数，传入traits的参数，此为双层结构，在STL中非常常见。</li>
+</ul>
+<h2 id="48、认识模板元编程（TMP）"><a href="#48、认识模板元编程（TMP）" class="headerlink" title="48、认识模板元编程（TMP）"></a>48、认识模板元编程（TMP）</h2><p>TMP可以将工作从运行期搬到编译期，从而实现更早的错误侦测和更高的执行效率。还可以被用来生成“基于政策选择组合”的客户定制代码，也可以用来避免生成对某些特殊类型并不合适的代码。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">unsigned</span> n&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Factorial</span>&#123;</span></span><br><span class="line">	<span class="keyword">enum</span>&#123;value = n * Factorial&lt;n<span class="number">-1</span>&gt;::value&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Factorial</span>&lt;0&gt;&#123;</span></span><br><span class="line">	<span class="keyword">enum</span>&#123;value = <span class="number">1</span>&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="49、定制new和delete"><a href="#49、定制new和delete" class="headerlink" title="49、定制new和delete"></a>49、定制new和delete</h2><p>set_new_handler允许客户制定一个函数，当内存分配失败时调用这个函数进行处理。</p>
+<p>Nothrow new只适用于内存分配，如果构造函数出现问题还是可能抛出异常。</p>
+<h2 id="50、了解new和delete的合理替换时机"><a href="#50、了解new和delete的合理替换时机" class="headerlink" title="50、了解new和delete的合理替换时机"></a>50、了解new和delete的合理替换时机</h2><p>有许多理由需要写个自定义的new和delete，包括改善性能、对heap运用错误进行调试、收集heap调试信息等。</p>
+<h2 id="51、编写new和delete时需固守常规"><a href="#51、编写new和delete时需固守常规" class="headerlink" title="51、编写new和delete时需固守常规"></a>51、编写new和delete时需固守常规</h2><p>operator new应该内含一个无穷循环，并在其中尝试分配内存，如果它无法满足内存要求，就该调用new_handler。它也应该有能力处理0bytes申请，class专属版本还应该处理“比正确大小更大的申请”。</p>
+<p>operator delete应该在收到null指针时不做任何事情，class专属版本还应该处理“比正确大小更大的申请”。</p>
+<h2 id="52、写了placement-new也要写placement-delete"><a href="#52、写了placement-new也要写placement-delete" class="headerlink" title="52、写了placement new也要写placement delete"></a>52、写了placement new也要写placement delete</h2><p>placement new只有placement delete能够delete，所以没有声明placement delete使用placement new的话会出现内存泄漏。</p>
+<p>当在类内声明placement new和placement delete时会遮盖标准的new和delete，一种做法是将所有标准的new/delete放到一个基类里，然后要自定义new/delete的类继承这个基类，使用using声明获取标准形式。</p>
+<h2 id="53、不要轻忽编译器的警告"><a href="#53、不要轻忽编译器的警告" class="headerlink" title="53、不要轻忽编译器的警告"></a>53、不要轻忽编译器的警告</h2><h2 id="54、让自己熟悉包括TR1在内的标准程序库"><a href="#54、让自己熟悉包括TR1在内的标准程序库" class="headerlink" title="54、让自己熟悉包括TR1在内的标准程序库"></a>54、让自己熟悉包括TR1在内的标准程序库</h2><p>C++标准库的主要机能由STL、iostream、locales组成，并包含C99标准程序库。</p>
+<p>TR1添加了智能指针、一般化函数指针（function）、hash-based容器、正则表达式以及另外10个组件的支持。</p>
+<p>TR1自身只是一个规范，为获得TR1提供的好处，需要一个实物，一个好的来源是Boost。</p>
+<h2 id="55、让自己熟悉Boost"><a href="#55、让自己熟悉Boost" class="headerlink" title="55、让自己熟悉Boost"></a>55、让自己熟悉Boost</h2><p>Boost是一个社群，致力于免费、源码开放、同僚复审的C++程序库开发。Boost在C++标准化过程中扮演深具影响力的角色。<br>Boost提供了许多TR1组件实现品，以及其他许多程序库。</p>
 
         
         </div>
@@ -234,7 +262,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/" data-id="cjg0trtay000u1tjxrhducerh" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/04/15/effective4/" data-id="cjg0trt9g00011tjxagdj7pw2" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -309,19 +337,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/04/06/读书笔记-Effective-C/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">上一篇</strong>
-            <div class="article-nav-title">
-                
-                    读书笔记 Effective C++
-                
-            </div>
-        </a>
     
-    
-        <a href="/2018/03/16/编译原理学习笔记（四）语义分析/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/04/07/effective3/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">编译原理学习笔记（四）语义分析</div>
+            <div class="article-nav-title">读书笔记 Effective C++(3)</div>
         </a>
     
 </nav>
