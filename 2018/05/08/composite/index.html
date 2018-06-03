@@ -3,20 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>编译原理学习笔记（五）代码生成 | 万事屋</title>
+    <title>设计模式之组合模式 | 万事屋</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
-<meta name="keywords" content="编译原理">
+    <meta name="description" content="组合模式定义允许你将对象组合成树形结构来表现“整体/部分”层次结构，组合能让客户以一致的方式处理个别对象以及对象组合。 类图 代码示例1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071">
+<meta name="keywords" content="读书笔记,设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="编译原理学习笔记（五）代码生成">
-<meta property="og:url" content="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/index.html">
+<meta property="og:title" content="设计模式之组合模式">
+<meta property="og:url" content="http://yoursite.com/2018/05/08/composite/index.html">
 <meta property="og:site_name" content="万事屋">
-<meta property="og:description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
+<meta property="og:description" content="组合模式定义允许你将对象组合成树形结构来表现“整体/部分”层次结构，组合能让客户以一致的方式处理个别对象以及对象组合。 类图 代码示例1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-03-17T14:16:58.392Z">
+<meta property="og:image" content="https://s1.ax1x.com/2018/05/08/Cdr9sJ.md.jpg">
+<meta property="og:updated_time" content="2018-05-08T23:49:43.195Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="编译原理学习笔记（五）代码生成">
-<meta name="twitter:description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
+<meta name="twitter:title" content="设计模式之组合模式">
+<meta name="twitter:description" content="组合模式定义允许你将对象组合成树形结构来表现“整体/部分”层次结构，组合能让客户以一致的方式处理个别对象以及对象组合。 类图 代码示例1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071">
+<meta name="twitter:image" content="https://s1.ax1x.com/2018/05/08/Cdr9sJ.md.jpg">
     
 
     
@@ -185,7 +187,7 @@
 </aside>
 
             
-            <section id="main"><article id="post-编译原理学习笔记（五）代码生成" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-composite" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -193,7 +195,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            编译原理学习笔记（五）代码生成
+            设计模式之组合模式
         </h1>
     
 
@@ -202,8 +204,8 @@
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/03/17/编译原理学习笔记（五）代码生成/">
-            <time datetime="2018-03-17T14:04:17.000Z" itemprop="datePublished">2018-03-17</time>
+        <a href="/2018/05/08/composite/">
+            <time datetime="2018-05-08T23:49:10.000Z" itemprop="datePublished">2018-05-08</time>
         </a>
     </div>
 
@@ -212,7 +214,7 @@
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
+        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
     </div>
 
                     </div>
@@ -223,7 +225,10 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><p>后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。<br>有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。<br>资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。<br>指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。</p>
+            <h2 id="组合模式"><a href="#组合模式" class="headerlink" title="组合模式"></a>组合模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>允许你将对象组合成树形结构来表现“整体/部分”层次结构，组合能让客户以一致的方式处理个别对象以及对象组合。</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><a href="https://imgchr.com/i/Cdr9sJ" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2018/05/08/Cdr9sJ.md.jpg" alt="Cdr9sJ.md.jpg"></a></p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MenuComponent</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(MenuComponent*)</span> </span>&#123;&#125;;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(MenuComponent*)</span> </span>&#123;&#125;;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> MenuComponent* <span class="title">getChild</span><span class="params">(<span class="keyword">int</span>)</span> </span>&#123; <span class="keyword">return</span> <span class="literal">nullptr</span>; &#125;;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="built_in">string</span> <span class="title">getName</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">string</span>(); &#125;;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MenuItem</span> :</span><span class="keyword">public</span> MenuComponent &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="built_in">string</span> name;</span><br><span class="line">	<span class="keyword">double</span> price;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	MenuItem(<span class="built_in">string</span> n, <span class="keyword">double</span> p) :name(n), price(p) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="built_in">string</span> <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> name;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; getName() &lt;&lt; <span class="string">"----"</span> &lt;&lt; to_string(price) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Menu</span> :</span><span class="keyword">public</span> MenuComponent &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="built_in">vector</span>&lt;MenuComponent*&gt; components;</span><br><span class="line">	<span class="built_in">string</span> name;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Menu(<span class="built_in">string</span> n) :name(n) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(MenuComponent* component)</span> </span>&#123;</span><br><span class="line">		components.push_back(component);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(MenuComponent* component)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">auto</span> it = find(components.begin(), components.end(), component);</span><br><span class="line">		<span class="keyword">if</span> (it != components.end()) &#123;</span><br><span class="line">			components.erase(it);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function">MenuComponent* <span class="title">getChild</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (index &lt; components.size()) &#123;</span><br><span class="line">			<span class="keyword">return</span> components[index];</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="built_in">string</span> <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> name;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; getName() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"----------------------"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> it = components.begin(); it != components.end(); ++it) &#123;</span><br><span class="line">			(*it)-&gt;print();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Waitress</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Waitress(MenuComponent* m) :menu(m) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">printMenu</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		menu-&gt;print();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	MenuComponent* menu;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>将集合和个体组合成树形结构，叶子节点是个体，非叶子节点是集合，集合包含多个个体，也就是包含多个叶子节点，这样对集合和个体提供一致的访问方式。</p>
 
         
         </div>
@@ -234,7 +239,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/" data-id="cjgybwwdb0019q6jxt7nleg7i" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/composite/" data-id="cjgybwwao0004q6jxdb6njazj" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -309,19 +314,19 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/04/06/读书笔记-Effective-C/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="/2018/05/08/state/" id="article-nav-newer" class="article-nav-link-wrap">
             <strong class="article-nav-caption">上一篇</strong>
             <div class="article-nav-title">
                 
-                    读书笔记 Effective C++
+                    设计模式之状态模式
                 
             </div>
         </a>
     
     
-        <a href="/2018/03/16/编译原理学习笔记（四）语义分析/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/05/08/iterator/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">编译原理学习笔记（四）语义分析</div>
+            <div class="article-nav-title">设计模式之迭代器模式</div>
         </a>
     
 </nav>

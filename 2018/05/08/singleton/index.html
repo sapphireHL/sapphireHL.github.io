@@ -3,20 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>编译原理学习笔记（五）代码生成 | 万事屋</title>
+    <title>设计模式之单件模式 | 万事屋</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
-<meta name="keywords" content="编译原理">
+    <meta name="description" content="单件模式定义确保一个类只有一个实例，并提供一个全局访问点。 类图 代码示例1234567891011121314151617181920212223242526272829303132333435363738394041class Singleton &amp;#123;public:	static Singleton* getInstance() &amp;#123;		if (instance == null">
+<meta name="keywords" content="读书笔记,设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="编译原理学习笔记（五）代码生成">
-<meta property="og:url" content="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/index.html">
+<meta property="og:title" content="设计模式之单件模式">
+<meta property="og:url" content="http://yoursite.com/2018/05/08/singleton/index.html">
 <meta property="og:site_name" content="万事屋">
-<meta property="og:description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
+<meta property="og:description" content="单件模式定义确保一个类只有一个实例，并提供一个全局访问点。 类图 代码示例1234567891011121314151617181920212223242526272829303132333435363738394041class Singleton &amp;#123;public:	static Singleton* getInstance() &amp;#123;		if (instance == null">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-03-17T14:16:58.392Z">
+<meta property="og:image" content="https://s1.ax1x.com/2018/05/08/CahCGR.jpg">
+<meta property="og:updated_time" content="2018-05-08T23:45:13.964Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="编译原理学习笔记（五）代码生成">
-<meta name="twitter:description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
+<meta name="twitter:title" content="设计模式之单件模式">
+<meta name="twitter:description" content="单件模式定义确保一个类只有一个实例，并提供一个全局访问点。 类图 代码示例1234567891011121314151617181920212223242526272829303132333435363738394041class Singleton &amp;#123;public:	static Singleton* getInstance() &amp;#123;		if (instance == null">
+<meta name="twitter:image" content="https://s1.ax1x.com/2018/05/08/CahCGR.jpg">
     
 
     
@@ -185,7 +187,7 @@
 </aside>
 
             
-            <section id="main"><article id="post-编译原理学习笔记（五）代码生成" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-singleton" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -193,7 +195,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            编译原理学习笔记（五）代码生成
+            设计模式之单件模式
         </h1>
     
 
@@ -202,8 +204,8 @@
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/03/17/编译原理学习笔记（五）代码生成/">
-            <time datetime="2018-03-17T14:04:17.000Z" itemprop="datePublished">2018-03-17</time>
+        <a href="/2018/05/08/singleton/">
+            <time datetime="2018-05-08T23:44:44.000Z" itemprop="datePublished">2018-05-08</time>
         </a>
     </div>
 
@@ -212,7 +214,7 @@
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
+        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
     </div>
 
                     </div>
@@ -223,7 +225,10 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><p>后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。<br>有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。<br>资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。<br>指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。</p>
+            <h2 id="单件模式"><a href="#单件模式" class="headerlink" title="单件模式"></a>单件模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>确保一个类只有一个实例，并提供一个全局访问点。</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><img src="https://s1.ax1x.com/2018/05/08/CahCGR.jpg" alt="CahCGR.jpg"></p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">static</span> Singleton* <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (instance == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">			instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"singleton:hello"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Singleton() &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> Singleton* instance;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//线程安全</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">static</span> Singleton* <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (instance == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">			lock.lock();</span><br><span class="line">			instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">			lock.unlock();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"singleton:hello"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Singleton() &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> Singleton* instance;</span><br><span class="line">	<span class="keyword">static</span> MutexLock lock;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>相当于全局变量，只有一个实例，全局共享，只能通过函数来取得实例，将构造函数声明为私有,有必要的话，将拷贝构造和赋值也声明为私有。</p>
 
         
         </div>
@@ -234,7 +239,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/" data-id="cjgybwwdb0019q6jxt7nleg7i" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/singleton/" data-id="cjgybwwbr000kq6jxmvygsp6n" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -309,19 +314,19 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/04/06/读书笔记-Effective-C/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="/2018/05/08/command/" id="article-nav-newer" class="article-nav-link-wrap">
             <strong class="article-nav-caption">上一篇</strong>
             <div class="article-nav-title">
                 
-                    读书笔记 Effective C++
+                    设计模式之命令模式
                 
             </div>
         </a>
     
     
-        <a href="/2018/03/16/编译原理学习笔记（四）语义分析/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/05/08/factory/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">编译原理学习笔记（四）语义分析</div>
+            <div class="article-nav-title">设计模式之工厂模式</div>
         </a>
     
 </nav>

@@ -3,20 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>编译原理学习笔记（五）代码生成 | 万事屋</title>
+    <title>设计模式之装饰者模式 | 万事屋</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
-<meta name="keywords" content="编译原理">
+    <meta name="description" content="装饰者模式定义动态地将责任附加到对象上。若要扩展功能，装饰者提供了比继承更有弹性的替代方案。 类图 代码示例123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172class Bever">
+<meta name="keywords" content="读书笔记,设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="编译原理学习笔记（五）代码生成">
-<meta property="og:url" content="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/index.html">
+<meta property="og:title" content="设计模式之装饰者模式">
+<meta property="og:url" content="http://yoursite.com/2018/05/07/decorator/index.html">
 <meta property="og:site_name" content="万事屋">
-<meta property="og:description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
+<meta property="og:description" content="装饰者模式定义动态地将责任附加到对象上。若要扩展功能，装饰者提供了比继承更有弹性的替代方案。 类图 代码示例123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172class Bever">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-03-17T14:16:58.392Z">
+<meta property="og:image" content="https://s1.ax1x.com/2018/05/07/CasrL9.jpg">
+<meta property="og:updated_time" content="2018-05-07T14:00:45.144Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="编译原理学习笔记（五）代码生成">
-<meta name="twitter:description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
+<meta name="twitter:title" content="设计模式之装饰者模式">
+<meta name="twitter:description" content="装饰者模式定义动态地将责任附加到对象上。若要扩展功能，装饰者提供了比继承更有弹性的替代方案。 类图 代码示例123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172class Bever">
+<meta name="twitter:image" content="https://s1.ax1x.com/2018/05/07/CasrL9.jpg">
     
 
     
@@ -185,7 +187,7 @@
 </aside>
 
             
-            <section id="main"><article id="post-编译原理学习笔记（五）代码生成" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-decorator" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -193,7 +195,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            编译原理学习笔记（五）代码生成
+            设计模式之装饰者模式
         </h1>
     
 
@@ -202,8 +204,8 @@
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/03/17/编译原理学习笔记（五）代码生成/">
-            <time datetime="2018-03-17T14:04:17.000Z" itemprop="datePublished">2018-03-17</time>
+        <a href="/2018/05/07/decorator/">
+            <time datetime="2018-05-07T14:00:07.000Z" itemprop="datePublished">2018-05-07</time>
         </a>
     </div>
 
@@ -212,7 +214,7 @@
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
+        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
     </div>
 
                     </div>
@@ -223,7 +225,10 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><p>后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。<br>有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。<br>资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。<br>指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。</p>
+            <h2 id="装饰者模式"><a href="#装饰者模式" class="headerlink" title="装饰者模式"></a>装饰者模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>动态地将责任附加到对象上。若要扩展功能，装饰者提供了比继承更有弹性的替代方案。</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><img src="https://s1.ax1x.com/2018/05/07/CasrL9.jpg" alt="CasrL9.jpg"></p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Beverage</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="built_in">string</span> <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> description;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">cost</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="built_in">string</span> description;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CondimentDecorator</span> :</span><span class="keyword">public</span> Beverage &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="built_in">string</span> <span class="title">getDescription</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Espresso</span> :</span><span class="keyword">public</span> Beverage &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Espresso()&#123;</span><br><span class="line">		description = <span class="string">"Espresso"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">double</span> <span class="title">cost</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1.99</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HouseBlend</span> :</span><span class="keyword">public</span> Beverage &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	HouseBlend()&#123;</span><br><span class="line">		description = <span class="string">"HouseBlend"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">double</span> <span class="title">cost</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0.89</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mocha</span> :</span><span class="keyword">public</span> CondimentDecorator &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Beverage* beverage;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Mocha(Beverage* b) :beverage(b) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="built_in">string</span> <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> beverage-&gt;getDescription() + <span class="string">",Mocha"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">double</span> <span class="title">cost</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0.2</span> + beverage-&gt;cost();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Whip</span> :</span><span class="keyword">public</span> CondimentDecorator &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Beverage* beverage;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Whip(Beverage* b) :beverage(b) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="built_in">string</span> <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> beverage-&gt;getDescription() + <span class="string">",Whip"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">double</span> <span class="title">cost</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0.5</span> + beverage-&gt;cost();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>使用接口，装饰者和被装饰者继承同一个接口，装饰者拥有一个被装饰者，当调用方法时，装饰者先执行自己新增的部分，再调用被装饰者的方法，这样就实现了扩展功能。</p>
 
         
         </div>
@@ -234,7 +239,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/" data-id="cjgybwwdb0019q6jxt7nleg7i" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/07/decorator/" data-id="cjgybwway0005q6jxrzc00614" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -309,19 +314,19 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/04/06/读书笔记-Effective-C/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="/2018/05/08/factory/" id="article-nav-newer" class="article-nav-link-wrap">
             <strong class="article-nav-caption">上一篇</strong>
             <div class="article-nav-title">
                 
-                    读书笔记 Effective C++
+                    设计模式之工厂模式
                 
             </div>
         </a>
     
     
-        <a href="/2018/03/16/编译原理学习笔记（四）语义分析/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/05/07/observer/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">编译原理学习笔记（四）语义分析</div>
+            <div class="article-nav-title">设计模式之观察者模式</div>
         </a>
     
 </nav>

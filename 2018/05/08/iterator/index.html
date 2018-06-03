@@ -3,20 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>编译原理学习笔记（五）代码生成 | 万事屋</title>
+    <title>设计模式之迭代器模式 | 万事屋</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
-<meta name="keywords" content="编译原理">
+    <meta name="description" content="迭代器模式定义提供一种方法顺序访问一个聚合对象中的各个元素，而又不暴露其内部的表示。 类图 代码示例略 理解用一个统一的接口访问不同的聚合对象（容器），不用知道对象其内部怎么实现，只需要用迭代器一个一个取出元素即可。迭代器由这个对象构造出来，因为只有这个对象知道该如何访问自己。">
+<meta name="keywords" content="读书笔记,设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="编译原理学习笔记（五）代码生成">
-<meta property="og:url" content="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/index.html">
+<meta property="og:title" content="设计模式之迭代器模式">
+<meta property="og:url" content="http://yoursite.com/2018/05/08/iterator/index.html">
 <meta property="og:site_name" content="万事屋">
-<meta property="og:description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
+<meta property="og:description" content="迭代器模式定义提供一种方法顺序访问一个聚合对象中的各个元素，而又不暴露其内部的表示。 类图 代码示例略 理解用一个统一的接口访问不同的聚合对象（容器），不用知道对象其内部怎么实现，只需要用迭代器一个一个取出元素即可。迭代器由这个对象构造出来，因为只有这个对象知道该如何访问自己。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-03-17T14:16:58.392Z">
+<meta property="og:image" content="https://s1.ax1x.com/2018/05/08/Cd9qr8.jpg">
+<meta property="og:updated_time" content="2018-05-08T23:48:58.751Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="编译原理学习笔记（五）代码生成">
-<meta name="twitter:description" content="任务后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。">
+<meta name="twitter:title" content="设计模式之迭代器模式">
+<meta name="twitter:description" content="迭代器模式定义提供一种方法顺序访问一个聚合对象中的各个元素，而又不暴露其内部的表示。 类图 代码示例略 理解用一个统一的接口访问不同的聚合对象（容器），不用知道对象其内部怎么实现，只需要用迭代器一个一个取出元素即可。迭代器由这个对象构造出来，因为只有这个对象知道该如何访问自己。">
+<meta name="twitter:image" content="https://s1.ax1x.com/2018/05/08/Cd9qr8.jpg">
     
 
     
@@ -185,7 +187,7 @@
 </aside>
 
             
-            <section id="main"><article id="post-编译原理学习笔记（五）代码生成" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-iterator" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -193,7 +195,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            编译原理学习笔记（五）代码生成
+            设计模式之迭代器模式
         </h1>
     
 
@@ -202,8 +204,8 @@
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/03/17/编译原理学习笔记（五）代码生成/">
-            <time datetime="2018-03-17T14:04:17.000Z" itemprop="datePublished">2018-03-17</time>
+        <a href="/2018/05/08/iterator/">
+            <time datetime="2018-05-08T23:48:31.000Z" itemprop="datePublished">2018-05-08</time>
         </a>
     </div>
 
@@ -212,7 +214,7 @@
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
+        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
     </div>
 
                     </div>
@@ -223,7 +225,10 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><p>后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。<br>有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。<br>资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。<br>指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。</p>
+            <h2 id="迭代器模式"><a href="#迭代器模式" class="headerlink" title="迭代器模式"></a>迭代器模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>提供一种方法顺序访问一个聚合对象中的各个元素，而又不暴露其内部的表示。</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><img src="https://s1.ax1x.com/2018/05/08/Cd9qr8.jpg" alt="Cd9qr8.jpg"></p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>略</p>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>用一个统一的接口访问不同的聚合对象（容器），不用知道对象其内部怎么实现，只需要用迭代器一个一个取出元素即可。迭代器由这个对象构造出来，因为只有这个对象知道该如何访问自己。</p>
 
         
         </div>
@@ -234,7 +239,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/" data-id="cjgybwwdb0019q6jxt7nleg7i" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/iterator/" data-id="cjgybwwb9000aq6jxi3xorc53" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -309,19 +314,19 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/04/06/读书笔记-Effective-C/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="/2018/05/08/composite/" id="article-nav-newer" class="article-nav-link-wrap">
             <strong class="article-nav-caption">上一篇</strong>
             <div class="article-nav-title">
                 
-                    读书笔记 Effective C++
+                    设计模式之组合模式
                 
             </div>
         </a>
     
     
-        <a href="/2018/03/16/编译原理学习笔记（四）语义分析/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/05/08/template/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">编译原理学习笔记（四）语义分析</div>
+            <div class="article-nav-title">设计模式之模板方法模式</div>
         </a>
     
 </nav>
