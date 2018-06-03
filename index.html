@@ -152,11 +152,11 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                12
+                26
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                5
+                6
                 <span>标签</span>
             </div>
         </div>
@@ -181,7 +181,7 @@
 
             
             <section id="main">
-    <article id="post-effective4" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-mvc" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -189,7 +189,7 @@
                 
     
         <h1 itemprop="name">
-            <a class="article-title" href="/2018/04/15/effective4/">读书笔记 Effective C++(4)</a>
+            <a class="article-title" href="/2018/05/08/mvc/">设计模式之复合模式</a>
         </h1>
     
 
@@ -198,8 +198,8 @@
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/04/15/effective4/">
-            <time datetime="2018-04-15T13:06:19.000Z" itemprop="datePublished">2018-04-15</time>
+        <a href="/2018/05/08/mvc/">
+            <time datetime="2018-05-08T23:51:05.000Z" itemprop="datePublished">2018-05-08</time>
         </a>
     </div>
 
@@ -208,7 +208,7 @@
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/C/">C++</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
+        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
     </div>
 
                     </div>
@@ -219,1016 +219,19 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h2 id="41、了解隐式接口和编译期多态"><a href="#41、了解隐式接口和编译期多态" class="headerlink" title="41、了解隐式接口和编译期多态"></a>41、了解隐式接口和编译期多态</h2><p>类和模板都支持接口和多态，对类而言，接口是显式的，以函数签名为中心，多态通过虚函数发生于运行期。</p>
-<p>对模板参数而言，接口是隐式的，基于有效的表达式，多态通过模板具现化和函数重载解析发生于编译期。</p>
-<h2 id="42、了解typename的双重意义"><a href="#42、了解typename的双重意义" class="headerlink" title="42、了解typename的双重意义"></a>42、了解typename的双重意义</h2><p>作为模板参数，class和typename没有不同，可以互换。</p>
-<p>当使用一个内嵌类型时，需要在前面加上typename，编译器才知道它是一个类型而不是成员或者函数。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Sample</span><span class="params">(T t)</span></span>&#123;</span><br><span class="line">	<span class="keyword">typename</span> <span class="built_in">std</span>::iterator_traits&lt;T&gt;::<span class="function">value_type <span class="title">temp</span><span class="params">(T)</span></span>;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="43、学习处理模板化基类内的名称"><a href="#43、学习处理模板化基类内的名称" class="headerlink" title="43、学习处理模板化基类内的名称"></a>43、学习处理模板化基类内的名称</h2><p>因为基类模板可能被特化不提供基类模板的某个函数，所以在派生类里面直接调用模板基类的函数无法通过编译，可以通过this指针和using声明或者基类作用域符号来告诉编译器假定该函数存在。</p>
-<h2 id="44、将与参数无关的代码抽离templates"><a href="#44、将与参数无关的代码抽离templates" class="headerlink" title="44、将与参数无关的代码抽离templates"></a>44、将与参数无关的代码抽离templates</h2><p>模板生成多个类和函数，所以任何模板都不该与某个造成膨胀的模板参数产生相依关系。</p>
-<p>用函数参数或者class成员变量代替模板参数可以消除这种膨胀。</p>
-<p>还可以让具有完全相同的二进制表述的类型共享实现码，也可以减小膨胀，如int和long在一些机器上是一样的，所有指针类型都是一样的。</p>
-<h2 id="45、运用成员函数模板接受所有兼容类型"><a href="#45、运用成员函数模板接受所有兼容类型" class="headerlink" title="45、运用成员函数模板接受所有兼容类型"></a>45、运用成员函数模板接受所有兼容类型</h2><p>泛化构造函数可以使一个类型隐式转换成另一个类型：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">shared_ptr</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line">	<span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">Y</span>&gt;</span></span><br><span class="line"><span class="class">	<span class="title">shared_ptr</span>(<span class="title">shared_ptr</span>&lt;Y&gt; <span class="title">const</span>&amp;);</span> <span class="comment">//泛化构造函数</span></span><br><span class="line"></span><br><span class="line">	templa&lt;<span class="class"><span class="keyword">class</span> <span class="title">Y</span>&gt;</span></span><br><span class="line"><span class="class">	<span class="title">shared_ptr</span>&amp; <span class="title">operator</span>=(<span class="title">shared_ptr</span>&lt;Y&gt; <span class="title">const</span>&amp;);</span> <span class="comment">//泛化赋值函数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>声明了泛化构造函数还是需要声明正常的构造函数和赋值函数。</p>
-<h2 id="46、需要类型转换时请为模板定义非成员函数"><a href="#46、需要类型转换时请为模板定义非成员函数" class="headerlink" title="46、需要类型转换时请为模板定义非成员函数"></a>46、需要类型转换时请为模板定义非成员函数</h2><p>当提供与模板相关的包含参数隐式转换的函数时，将函数定义为friend并在类内实现。</p>
-<h2 id="47、请使用traits-classes表现类型信息"><a href="#47、请使用traits-classes表现类型信息" class="headerlink" title="47、请使用traits classes表现类型信息"></a>47、请使用traits classes表现类型信息</h2><p>traits classes，特性萃取，使得类型相关信息在编译期可用，以template内嵌typedef和偏特化实现。</p>
-<p>如何使用traits？</p>
-<ul>
-<li>建立一组重载函数，最后一个参数是traits的类型参数，对于不同的类型做实现。</li>
-<li>另外建立一个控制函数调用上述函数，传入traits的参数，此为双层结构，在STL中非常常见。</li>
-</ul>
-<h2 id="48、认识模板元编程（TMP）"><a href="#48、认识模板元编程（TMP）" class="headerlink" title="48、认识模板元编程（TMP）"></a>48、认识模板元编程（TMP）</h2><p>TMP可以将工作从运行期搬到编译期，从而实现更早的错误侦测和更高的执行效率。还可以被用来生成“基于政策选择组合”的客户定制代码，也可以用来避免生成对某些特殊类型并不合适的代码。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">unsigned</span> n&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Factorial</span>&#123;</span></span><br><span class="line">	<span class="keyword">enum</span>&#123;value = n * Factorial&lt;n<span class="number">-1</span>&gt;::value&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Factorial</span>&lt;0&gt;&#123;</span></span><br><span class="line">	<span class="keyword">enum</span>&#123;value = <span class="number">1</span>&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="49、定制new和delete"><a href="#49、定制new和delete" class="headerlink" title="49、定制new和delete"></a>49、定制new和delete</h2><p>set_new_handler允许客户制定一个函数，当内存分配失败时调用这个函数进行处理。</p>
-<p>Nothrow new只适用于内存分配，如果构造函数出现问题还是可能抛出异常。</p>
-<h2 id="50、了解new和delete的合理替换时机"><a href="#50、了解new和delete的合理替换时机" class="headerlink" title="50、了解new和delete的合理替换时机"></a>50、了解new和delete的合理替换时机</h2><p>有许多理由需要写个自定义的new和delete，包括改善性能、对heap运用错误进行调试、收集heap调试信息等。</p>
-<h2 id="51、编写new和delete时需固守常规"><a href="#51、编写new和delete时需固守常规" class="headerlink" title="51、编写new和delete时需固守常规"></a>51、编写new和delete时需固守常规</h2><p>operator new应该内含一个无穷循环，并在其中尝试分配内存，如果它无法满足内存要求，就该调用new_handler。它也应该有能力处理0bytes申请，class专属版本还应该处理“比正确大小更大的申请”。</p>
-<p>operator delete应该在收到null指针时不做任何事情，class专属版本还应该处理“比正确大小更大的申请”。</p>
-<h2 id="52、写了placement-new也要写placement-delete"><a href="#52、写了placement-new也要写placement-delete" class="headerlink" title="52、写了placement new也要写placement delete"></a>52、写了placement new也要写placement delete</h2><p>placement new只有placement delete能够delete，所以没有声明placement delete使用placement new的话会出现内存泄漏。</p>
-<p>当在类内声明placement new和placement delete时会遮盖标准的new和delete，一种做法是将所有标准的new/delete放到一个基类里，然后要自定义new/delete的类继承这个基类，使用using声明获取标准形式。</p>
-<h2 id="53、不要轻忽编译器的警告"><a href="#53、不要轻忽编译器的警告" class="headerlink" title="53、不要轻忽编译器的警告"></a>53、不要轻忽编译器的警告</h2><h2 id="54、让自己熟悉包括TR1在内的标准程序库"><a href="#54、让自己熟悉包括TR1在内的标准程序库" class="headerlink" title="54、让自己熟悉包括TR1在内的标准程序库"></a>54、让自己熟悉包括TR1在内的标准程序库</h2><p>C++标准库的主要机能由STL、iostream、locales组成，并包含C99标准程序库。</p>
-<p>TR1添加了智能指针、一般化函数指针（function）、hash-based容器、正则表达式以及另外10个组件的支持。</p>
-<p>TR1自身只是一个规范，为获得TR1提供的好处，需要一个实物，一个好的来源是Boost。</p>
-<h2 id="55、让自己熟悉Boost"><a href="#55、让自己熟悉Boost" class="headerlink" title="55、让自己熟悉Boost"></a>55、让自己熟悉Boost</h2><p>Boost是一个社群，致力于免费、源码开放、同僚复审的C++程序库开发。Boost在C++标准化过程中扮演深具影响力的角色。<br>Boost提供了许多TR1组件实现品，以及其他许多程序库。</p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2018/04/15/effective4/" data-id="cjg0trt9g00011tjxagdj7pw2" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-effective3" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/04/07/effective3/">读书笔记 Effective C++(3)</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/04/07/effective3/">
-            <time datetime="2018-04-07T12:34:53.000Z" itemprop="datePublished">2018-04-07</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/C/">C++</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h2 id="26、尽可能延后变量定义式的出现时间"><a href="#26、尽可能延后变量定义式的出现时间" class="headerlink" title="26、尽可能延后变量定义式的出现时间"></a>26、尽可能延后变量定义式的出现时间</h2><p>这样做可以增加程序的清晰度并改善程序效率。如果程序异常提前退出而变量定义在前，则该变量不会被使用但是还是付出了构造和析构的成本，因此将变量定义延后直到使用变量之前，甚至延后到能给予初值之前，这样可以避免无意义的default构造函数。</p>
-<h2 id="27、尽量少做转型动作"><a href="#27、尽量少做转型动作" class="headerlink" title="27、尽量少做转型动作"></a>27、尽量少做转型动作</h2><p>尽量避免转型，特别是避免dynamic_cast，其运行速度很慢，如果某个设计需要转型动作，试着找一些替代做法，如virtual函数，如果转型是必要的，将其隐藏于某个函数里。<br>使用C++新式转型不要用旧式转型，前者很容易识别出来。</p>
-<h2 id="28、避免返回handles指向对象内部成分"><a href="#28、避免返回handles指向对象内部成分" class="headerlink" title="28、避免返回handles指向对象内部成分"></a>28、避免返回handles指向对象内部成分</h2><p>避免返回handles（指针，引用，迭代器）指向对象内部，一是提升封装性，如果指向private成员，则用户可以修改这些成员，private就没用了，二是帮助const成员函数的行为像一个const，并降低空悬的可能性。</p>
-<h2 id="29、为异常安全努力是值得的"><a href="#29、为异常安全努力是值得的" class="headerlink" title="29、为异常安全努力是值得的"></a>29、为异常安全努力是值得的</h2><p>异常安全函数即使发生异常也不会泄漏资源或允许任何数据结构被破坏，这样的函数分为3种可能，基本型（若异常被抛出，程序内任何事物仍然处于有效状态下，有可能发生改变）、强烈型（要么全变，要么不变）、不抛异常型。</p>
-<p>强烈保证往往能够以copy and swap实现出来，但不一定对所有函数都有实现意义，例如copy的成本太高。</p>
-<p>一个函数提供的异常安全性最高是它所调用的各个函数的安全性的最弱的一个。</p>
-<h2 id="30、透彻了解inlining的里里外外"><a href="#30、透彻了解inlining的里里外外" class="headerlink" title="30、透彻了解inlining的里里外外"></a>30、透彻了解inlining的里里外外</h2><ul>
-<li>inline将每一处调用函数的地方都用函数本体替换，提升运行速度但会导致代码膨胀，因此inline函数适合体积小、调用频繁的函数</li>
-<li>在类内部定义的函数默认是inline的</li>
-<li>inline只是一种申请，实际上到底实施inline还要取决于编译器的决定</li>
-<li>因为inline是编译时决定，而virtual是运行时决定，所以对一个virtual函数inline没有意义。</li>
-<li>如果需要对inline的函数取地址，编译器往往会生成一个no-inline的函数，当用函数指针调用这个函数时，使用的是非inline的版本。</li>
-<li>inline函数往往不利于调试，无法设置断点</li>
-</ul>
-<h2 id="31、将文件间的编译依存关系降至最低"><a href="#31、将文件间的编译依存关系降至最低" class="headerlink" title="31、将文件间的编译依存关系降至最低"></a>31、将文件间的编译依存关系降至最低</h2><p>支持“编译依存性最小化”的一般构想是：相依于声明式，不要相依于定义式，两个手段是Handle class（pimpl）和Interface class（抽象类）。</p>
-<p>程序库头文件应该以“完全且仅有声明式”的形式存在，这种做法不论是否涉及templates都适用。</p>
-<h2 id="32、确定你的public继承塑模出is-a关系"><a href="#32、确定你的public继承塑模出is-a关系" class="headerlink" title="32、确定你的public继承塑模出is-a关系"></a>32、确定你的public继承塑模出is-a关系</h2><p>public继承意味着is-a，对基类适用的所有操作对派生类也适用，因为每个派生类对象也是一个基类对象。</p>
-<h2 id="33、避免遮掩继承而来的名称"><a href="#33、避免遮掩继承而来的名称" class="headerlink" title="33、避免遮掩继承而来的名称"></a>33、避免遮掩继承而来的名称</h2><p>派生类内的名称会遮掩基类内的名称，可以适用using声明来让基类的名称可见，或者使用转交函数，转交函数显式调用基类的函数。</p>
-<h2 id="34、区分接口继承和实现继承"><a href="#34、区分接口继承和实现继承" class="headerlink" title="34、区分接口继承和实现继承"></a>34、区分接口继承和实现继承</h2><p>接口继承和实现继承不同，在public继承下，派生类总是继承基类的接口。</p>
-<p>纯虚函数只具体指定接口继承，派生类必须自己实现。</p>
-<p>虚函数指定接口继承和缺省实现继承，派生类可以选择实现，可以用纯虚函数来实现，基类的纯虚函数定义缺省行为，在派生类的虚函数实现中显式调用基类的纯虚函数。</p>
-<p>非虚函数实现接口继承和强制性实现继承，派生类不应该重新定义。</p>
-<h2 id="35、考虑virtual函数以外的其他选择"><a href="#35、考虑virtual函数以外的其他选择" class="headerlink" title="35、考虑virtual函数以外的其他选择"></a>35、考虑virtual函数以外的其他选择</h2><p>虚函数的替代方案，第一个是NVI（Non-Virtual Interface）手法，是一种Template Method设计模式，定义一个非虚的public函数调用private的虚函数，这个非虚函数成为外覆器，这么做的好处是在虚函数调用前后，还可以做其他的处理，如互斥锁上锁，制造日志等，只用virtual函数无法做到这些。</p>
-<p>第二个是所谓的Strategy模式，用函数指针代替虚函数，创建对象时传递相应的函数指针，这样的好处是对于同一类型可以有不同的表现方法，传递的函数不同表现则不同，有更大的弹性，若对象的表现在运行期会改变，也可以提供一个setMethod函数方便地进行改变，但是这样的函数若需要访问类的私有成员就不得不声明为友元，降低了类的封装性。<br>还可以用function来实现Strategy模式，function可以保存的是所有可以调用的对象，包括函数指针，仿函数，成员函数等，而且也允许兼容，例如返回类型或者参数类型可以隐式转换成所需的类型，这样的函数也可以放进function里面。<br>一种古典的Strategy模式是将体系内的virtual函数替换为另一个继承体系中的virtual函数。</p>
-<h2 id="36、绝不重新定义继承而来的non-virtual函数"><a href="#36、绝不重新定义继承而来的non-virtual函数" class="headerlink" title="36、绝不重新定义继承而来的non-virtual函数"></a>36、绝不重新定义继承而来的non-virtual函数</h2><p>由于静态绑定的原因，当用基类指针调用non-virtual函数时永远是调用基类的，因此不要重新定义继承来的non-virtual函数。</p>
-<h2 id="37、绝不重新定义继承而来的缺省参数值"><a href="#37、绝不重新定义继承而来的缺省参数值" class="headerlink" title="37、绝不重新定义继承而来的缺省参数值"></a>37、绝不重新定义继承而来的缺省参数值</h2><p>缺省参数值是静态绑定，而虚函数是动态绑定，当缺省参数不同时，基类指针只会调用基类的缺省参数不会用派生类的。</p>
-<h2 id="38、通过复合塑模出has-a或者“根据某物实现出”"><a href="#38、通过复合塑模出has-a或者“根据某物实现出”" class="headerlink" title="38、通过复合塑模出has-a或者“根据某物实现出”"></a>38、通过复合塑模出has-a或者“根据某物实现出”</h2><p>public继承是is-a，而在类里定义另一个类的对象则是has-a或者is-implemented-in-terms-of a（由a实现出）。</p>
-<h2 id="39、明智而审慎地使用private继承"><a href="#39、明智而审慎地使用private继承" class="headerlink" title="39、明智而审慎地使用private继承"></a>39、明智而审慎地使用private继承</h2><p>private继承是一种is-implemented-in-terms-of，private继承的派生类对象不会被转为基类对象，类似于复合，根据某物实现出，<strong>尽可能使用复合</strong>而不是private继承，当需要访问protected成员和virtual函数时，使用private继承。</p>
-<p>private继承可以利用empty base最优化：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Empty</span>&#123;</span>&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HoldInt</span>&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">int</span> x;</span><br><span class="line">	Empty e;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>上面这个复合的例子，空的类的size并不是0，编译器往往会放入一个char，size往往是1，因此HoldInt的size加上对齐达到了8，而使用private继承就不会有这种问题：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Empty</span>&#123;</span>&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HoldInt</span> :</span> <span class="keyword">private</span> Empty&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">int</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这时HoldInt的size就为一个int的大小。</p>
-<h2 id="40、明智而审慎地使用多重继承"><a href="#40、明智而审慎地使用多重继承" class="headerlink" title="40、明智而审慎地使用多重继承"></a>40、明智而审慎地使用多重继承</h2><p>多重继承比单继承复杂，可能导致二义性，即两个基类中有同名函数，不知道该调用哪一个，此外如果一个基类在继承路径上出现多次还可能需要虚继承。</p>
-<p>虚继承会增加大小、速度、初始化复杂度等成本，如果虚基类不带任何数据是最具有实用性的情况。</p>
-<p>多重继承的一个用途是，其中一个以public继承某个interface，另一个以private继承某个实现。</p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2018/04/07/effective3/" data-id="cjg0trt9500001tjx4xl8r4qi" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-effectiveC-2" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/04/06/effectiveC-2/">读书笔记 Effective C++(2)</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/04/06/effectiveC-2/">
-            <time datetime="2018-04-07T03:16:59.000Z" itemprop="datePublished">2018-04-06</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/C/">C++</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h2 id="13、以对象管理资源"><a href="#13、以对象管理资源" class="headerlink" title="13、以对象管理资源"></a>13、以对象管理资源</h2><p>将动态分配的资源放进一个资源管理类中，构造函数中获得资源（RAII），析构函数保证了这些资源的释放。<br>常用的有shared_ptr和auto_ptr，前者常用，后者复制时会把被复制的指针置为null，一块内存只能有一个auto_ptr指向它。</p>
-<h2 id="14、在资源类中小心copying行为"><a href="#14、在资源类中小心copying行为" class="headerlink" title="14、在资源类中小心copying行为"></a>14、在资源类中小心copying行为</h2><p>考虑下面这么一个管理互斥锁的类：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lock</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	explicit Lock(Mutex* pm): mutexPtr(pm)&#123;</span><br><span class="line">		lock(mutexPtr);<span class="comment">//获得资源</span></span><br><span class="line">	&#125;</span><br><span class="line">	~Lock()&#123;</span><br><span class="line">		unlock(mutexPtr);<span class="comment">//释放资源</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>当Lock类复制时，大多数时候可以有两种选择，第一个是禁止复制：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lock</span>： <span class="title">private</span> <span class="title">Uncopyable</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>第二种是用引用计数法来管理复制，复制时，引用加1，当引用为0时，释放资源，使用shared_ptr还可以定制自己的删除器，因为有时候并不希望释放资源，像Lock，析构的时候不释放资源，只是解锁。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lock</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	explicit Lock(Mutex* pm): mutexPtr(pm, unlock)//指定删除器unlock</span><br><span class="line">	&#123;</span><br><span class="line">		lock(mutexPtr.get());</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="built_in">shared_ptr</span>&lt;Mutex&gt; mutexPtr;<span class="comment">//不再需要析构函数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="15、在资源管理类中提供对原始资源的访问"><a href="#15、在资源管理类中提供对原始资源的访问" class="headerlink" title="15、在资源管理类中提供对原始资源的访问"></a>15、在资源管理类中提供对原始资源的访问</h2><p>有些API需要对原始资源进行访问而不是资源管理类，故资源管理类应该提供办法对原始资源进行访问。<br>有显示转换和隐式转换两种办法。显示转换专门定义一个返回原始资源的函数，例如shared_ptr提供get函数返回原始指针。<br>隐式转换则是直接将资源管理类转换成原始资源类型，如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Font</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line">	<span class="comment">//隐式转换，Font转换为FontHandle</span></span><br><span class="line">	<span class="function"><span class="keyword">operator</span> <span class="title">FontHandle</span><span class="params">()</span> <span class="keyword">const</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> f;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	FontHandle f;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>隐式转换对用户来说很方便，但可能会产生一些问题，显示转换比较安全。</p>
-<h2 id="16、成对使用new和delete时要采取相同形式"><a href="#16、成对使用new和delete时要采取相同形式" class="headerlink" title="16、成对使用new和delete时要采取相同形式"></a>16、成对使用new和delete时要采取相同形式</h2><p>new和delete搭配，new[]和delete[]搭配，最好不要对数组做typedef。</p>
-<h2 id="17、以独立语句将newed对象置入智能指针"><a href="#17、以独立语句将newed对象置入智能指针" class="headerlink" title="17、以独立语句将newed对象置入智能指针"></a>17、以独立语句将newed对象置入智能指针</h2><p>以单独一条语句将new出来的对象放到智能指针中去。如果不这么做，一旦有异常抛出，可能会导致难以察觉的资源泄漏。</p>
-<h2 id="18、让接口容易被正确使用，不易被误用"><a href="#18、让接口容易被正确使用，不易被误用" class="headerlink" title="18、让接口容易被正确使用，不易被误用"></a>18、让接口容易被正确使用，不易被误用</h2><p>让接口正确使用的方法包括接口的一致性，与内置类型的行为兼容。<br>阻止误用的方法包括建立新类型、限制类型上的操作，束缚对象值，以及消除客户的资源管理责任。<br>shared_ptr支持定制删除器，可以防范DLL问题（即在一个DLL里创建在另一个DLL里释放），可以用来包装互斥锁，实现自动解锁。</p>
-<h2 id="19、设计class犹如设计type"><a href="#19、设计class犹如设计type" class="headerlink" title="19、设计class犹如设计type"></a>19、设计class犹如设计type</h2><p>设计class就是设计一个新type，要考虑方方面面的问题。</p>
-<h2 id="20、宁可以pass-by-reference-to-const替换pass-by-value"><a href="#20、宁可以pass-by-reference-to-const替换pass-by-value" class="headerlink" title="20、宁可以pass by reference to const替换pass by value"></a>20、宁可以pass by reference to const替换pass by value</h2><p>对一个类对象传值意味着复制，会调用拷贝构造函数和析构函数，造成了不必要的时间消耗，而传引用则不会调用拷贝构造函数，更高效，如果函数对传入的参数不进行改变，应该加上const。<br>对于内置类型和STL的迭代器和函数对象，传值比较适合。</p>
-<h2 id="21、必须返回对象时，别妄想返回其reference"><a href="#21、必须返回对象时，别妄想返回其reference" class="headerlink" title="21、必须返回对象时，别妄想返回其reference"></a>21、必须返回对象时，别妄想返回其reference</h2><p>不要返回对一个局部对象的引用，在函数结束后该对象被释放，引用变成不合法的。<br>同样不要在函数内返回一个newed对象的引用，因为delete得不到保障。<br>也不要返回对一个static对象的引用，如果同时需要多个这样的对象，会出问题。<br>指针同理。</p>
-<h2 id="22、将成员变量声明为private"><a href="#22、将成员变量声明为private" class="headerlink" title="22、将成员变量声明为private"></a>22、将成员变量声明为private</h2><p>为了封装性，将成员变量声明为private，这可以赋予客户端访问数据的一致性、可以细微划分成员的访问控制（可读可写）、允许约束条件获得保证，并提供class作者充分的实现弹性。<br>protect的封装性不比public好，因为派生类可以访问protect成员。</p>
-<h2 id="23、宁以non-member、non-friend替换member函数"><a href="#23、宁以non-member、non-friend替换member函数" class="headerlink" title="23、宁以non-member、non-friend替换member函数"></a>23、宁以non-member、non-friend替换member函数</h2><p>这样做可以增加封装性、包裹弹性和机能扩充性。</p>
-<h2 id="24、若所有参数皆需要类型转换，请为此采用non-member函数"><a href="#24、若所有参数皆需要类型转换，请为此采用non-member函数" class="headerlink" title="24、若所有参数皆需要类型转换，请为此采用non-member函数"></a>24、若所有参数皆需要类型转换，请为此采用non-member函数</h2><p>如果一个函数需要对所有参数进行类型转换，它必须是non-member的，因此调用端不能进行类型转换。如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rational</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Rational(<span class="keyword">int</span> numerator = <span class="number">0</span>, <span class="keyword">int</span> denominator = <span class="number">1</span>); <span class="comment">//无explicit，允许隐式转换</span></span><br><span class="line">	<span class="keyword">const</span> Rational <span class="keyword">operator</span>*(<span class="keyword">const</span> Rational&amp; rhs) <span class="keyword">const</span>;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line">Rational onehalf = Rational(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">Rational result;</span><br><span class="line">result = onehalf * <span class="number">2</span>;  <span class="comment">//正确，2进行了隐式转换</span></span><br><span class="line">result = <span class="number">2</span> * onehalf; <span class="comment">//错误，相当于2.operator*(onehalf),2不是Rational类型！</span></span><br></pre></td></tr></table></figure></p>
-<p>解决方法就是将该函数声明为non-meber的：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Rational <span class="keyword">operator</span>*(<span class="keyword">const</span> Rational&amp; lhs, <span class="keyword">const</span> Rational&amp; rhs) <span class="keyword">const</span>;</span><br><span class="line"></span><br><span class="line">Rational onehalf = Rational(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">Rational result;</span><br><span class="line">result = onehalf * <span class="number">2</span>;  <span class="comment">//正确，2进行了隐式转换</span></span><br><span class="line">result = <span class="number">2</span> * onehalf;  <span class="comment">//正确！</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="25、考虑写一个不抛出异常的swap函数"><a href="#25、考虑写一个不抛出异常的swap函数" class="headerlink" title="25、考虑写一个不抛出异常的swap函数"></a>25、考虑写一个不抛出异常的swap函数</h2><p>当std的swap对一个类型效率不高时，提供一个swap成员函数，且这个成员函数不应该抛出异常，往往这个类承担一种指针的角色，指向真正的实现类（pimpl），swap只需要互换指针而不需要互换数据。<br>如果提供一个成员函数，也该提供一个非成员函数来调用成员函数，对于class，也请特化std的swap。<br>调用swap时先声明using std::swap然后再调用，且调用不包含任何的命名空间的修饰。<br>不要在std里加入新东西。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> WidgetStuff&#123;</span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">Widget</span>&#123;</span></span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		WidgetImpl* pImpl;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		...</span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(Widget&amp; other)</span></span>&#123;</span><br><span class="line">			<span class="keyword">using</span> <span class="built_in">std</span>::swap;</span><br><span class="line">			swap(pImpl, other.pImpl);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(Widget&amp; a, Widget&amp; b)</span></span>&#123;</span><br><span class="line">		a.swap(b);<span class="comment">//调用成员函数</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2018/04/06/effectiveC-2/" data-id="cjg0trt9t00031tjxy3rz0ufl" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-读书笔记-Effective-C" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/04/06/读书笔记-Effective-C/">读书笔记 Effective C++</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/04/06/读书笔记-Effective-C/">
-            <time datetime="2018-04-06T08:56:42.000Z" itemprop="datePublished">2018-04-06</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/C/">C++</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <p>共有55个法则。</p>
-<h2 id="1、视C-为一个语言联邦"><a href="#1、视C-为一个语言联邦" class="headerlink" title="1、视C++为一个语言联邦"></a>1、视C++为一个语言联邦</h2><p>C++包含多个次语言：</p>
-<ul>
-<li>C</li>
-<li>面向对象</li>
-<li>模板</li>
-<li>STL</li>
-</ul>
-<p>每个次语言都有自己不同的规范。</p>
-<h2 id="2、尽量用const，enum，inline代替-define"><a href="#2、尽量用const，enum，inline代替-define" class="headerlink" title="2、尽量用const，enum，inline代替#define"></a>2、尽量用const，enum，inline代替#define</h2><p>#define宏定义直接被替换掉，因此像<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> NUM 123</span></span><br></pre></td></tr></table></figure></p>
-<p>当程序获得一个编译错误时，不会出现NUM，因为NUM已经被123替换掉了，可能存在多个123，因此就无从得知123对应的是什么意思，用const就不会有这种问题。此外const还可以定义类内的专属常量，比如：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GamePlayer</span>&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> NumTurns = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">int</span> scores[NumTurns];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>使用enum hack也可以做到这一点：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GamePlayer</span>&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">enum</span> &#123; NumTurns = <span class="number">5</span> &#125;;</span><br><span class="line">    <span class="keyword">int</span> scores[NumTurns];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>enum中的数值可以当作int来使用。<br>这种常量是类内专用的，如果用#define就做不到这一点，因为#define的值是作用到全局的。enum hack的行为更像#define，它们都不能取地址，而const可以取地址。</p>
-<p>对于函数形式的宏，会导致各种各样的问题，最好用inline函数代替。</p>
-<h2 id="3、尽可能使用const"><a href="#3、尽可能使用const" class="headerlink" title="3、尽可能使用const"></a>3、尽可能使用const</h2><p>const修饰的对象不能被改变，编译器会强制实行这个约束。</p>
-<p>const作用于类的成员函数时，不能对成员变量进行修改，但是通过使用mutable关键字的成员变量可以在const成员函数里被改变。</p>
-<p>当const成员函数和non-const成员函数的实现等价时，可以让non-const函数调用const版本避免代码重复，方法是用const_cast去除const属性。如下例：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TextBlock</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>&amp; <span class="keyword">operator</span>[](<span class="built_in">std</span>::<span class="keyword">size_t</span> position) <span class="keyword">const</span></span><br><span class="line">    &#123;</span><br><span class="line">        ...</span><br><span class="line">        ...</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">return</span> text[position];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">char</span>&amp; <span class="keyword">operator</span>[](<span class="built_in">std</span>::<span class="keyword">size_t</span> position)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">const_cast</span>&lt;<span class="keyword">char</span>&amp;&gt;(                         <span class="comment">//去除const属性</span></span><br><span class="line">                <span class="keyword">static_cast</span>&lt;<span class="keyword">const</span> TextBlock&amp;&gt;(*<span class="keyword">this</span>)      <span class="comment">//将*this转为const调用const版本的[]</span></span><br><span class="line">                [position]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="4、确定对象被使用前已先被初始化"><a href="#4、确定对象被使用前已先被初始化" class="headerlink" title="4、确定对象被使用前已先被初始化"></a>4、确定对象被使用前已先被初始化</h2><p>对于内置类型如int、double等，必须手工完成初始化，C++不保证初始化他们。</p>
-<p>对于类类型，构造函数必须保证初始化所有的成员，最好的方式是使用初始化列表而不是在函数体内赋值，初始化列表使用对应参数直接进行拷贝构造，而函数体内赋值则是先经过默认构造函数构造然后再进行赋值，效率较低，且const，引用和没有默认构造函数的类成员只能在初始化列表中进行初始化。</p>
-<p>对于位于多个不同文件中的static对象，为了避免初始化次序带来的问题，如A的初始化依赖于B，而B不保证在A初始化之前进行初始化，可以将static对象放到一个函数里，在函数里声明局部的static对象，返回这个对象的引用，将直接使用static对象改为调用函数来使用static对象，这样就保证static对象在使用时一定已经经过了初始化。如下是一个例子：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FileSystem</span>&#123;</span>...&#125;；</span><br><span class="line"><span class="function">FileSystem&amp; <span class="title">tfs</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> FileSystem fs;</span><br><span class="line">    <span class="keyword">return</span> fs;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Directory</span>&#123;</span>...&#125;;</span><br><span class="line">Directory::Directory(params)&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="built_in">std</span>::<span class="keyword">size_t</span> disks = tfs().numDisks();</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Directory&amp; <span class="title">tempDir</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> Directory td;</span><br><span class="line">    <span class="keyword">return</span> td;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>tfs()函数保证fs对象在使用前已经进行了初始化。</p>
-<h2 id="5、了解C-默默编写并调用哪些函数"><a href="#5、了解C-默默编写并调用哪些函数" class="headerlink" title="5、了解C++默默编写并调用哪些函数"></a>5、了解C++默默编写并调用哪些函数</h2><p>编译器会自动为class创建默认构造函数、拷贝构造函数、赋值操作符、析构函数。只要用户自己声明了一个构造函数，编译器就不会自动创建默认构造函数。<br>如果类成员包含const或者引用，编译器不会自动合成一个赋值操作符，因为const和引用不能赋值，此时需要自己编写赋值操作符。<br>如果基类的赋值操作符是private的，则编译器也不会为其派生类合成赋值操作符。</p>
-<h2 id="6、若不想使用编译器自动生成的函数，就该明确拒绝"><a href="#6、若不想使用编译器自动生成的函数，就该明确拒绝" class="headerlink" title="6、若不想使用编译器自动生成的函数，就该明确拒绝"></a>6、若不想使用编译器自动生成的函数，就该明确拒绝</h2><p>可以将成员函数声明为private的，来阻止编译器的自动合成行为。比如我们不希望一个类进行拷贝或赋值，可以将拷贝构造函数和赋值操作符声明为private，且不给出实现，如此当程序试图拷贝这个类时，编译器会报错，当类的成员函数或友元调用这个函数时，由于没有给出实现，因此连接器会报错。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HomeForSale</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	...	</span><br><span class="line">	HomeForSale(<span class="keyword">const</span> HomeForSale&amp;);</span><br><span class="line">	HomeForSale&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> HomeForSale&amp;); <span class="comment">//只声明不定义</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>第二种方法是设计一个不能拷贝的基类，让其余类派生自这个基类，则这些派生类也就不能拷贝了。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Uncopyable</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="comment">//允许构造和析构</span></span><br><span class="line">	Uncopyable();</span><br><span class="line">	~Uncopyable();</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="comment">//不允许拷贝和赋值</span></span><br><span class="line">	Uncopyable(<span class="keyword">const</span> Uncopyable&amp;);</span><br><span class="line">	Uncopyable&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Uncopyable&amp;);</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HomeForSale</span>:</span><span class="keyword">private</span> Uncopyable&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="7、为多态基类声明virtual析构函数"><a href="#7、为多态基类声明virtual析构函数" class="headerlink" title="7、为多态基类声明virtual析构函数"></a>7、为多态基类声明virtual析构函数</h2><p>考虑下面的例子：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TimeKeeper</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	TimeKeeper();</span><br><span class="line">	~TimeKeeper();</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AtomicClock</span>:</span><span class="keyword">public</span> TimerKeeper&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line">TimeKeeper* tk = <span class="keyword">new</span> AtomicClock;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">delete</span> tk;</span><br></pre></td></tr></table></figure></p>
-<p>创建一个基类的指针指向派生类对象，而该指针释放时，却由基类指针进行释放，而且析构函数不是virtual的，因此只有基类的部分进行了析构，而派生类的部分没有得到析构，因此造成了内存泄漏。将基类的析构函数声明为virtual就可解决这个问题。往往一个基类只要包含了其他的virtual函数，它的析构函数也要是virtual的，virtual函数是用来实现多态的，需要用基类的指针指向派生类对象，因此析构函数必须是virtual。若一个基类没有virtual函数，说明这个基类不是用于多态，就不需要virtual析构函数，因为virtual函数带来了额外的vptr的空间开销，因此若不需要多态就不应该将析构函数声明为virtual的。</p>
-<h2 id="8、别让异常逃离析构函数"><a href="#8、别让异常逃离析构函数" class="headerlink" title="8、别让异常逃离析构函数"></a>8、别让异常逃离析构函数</h2><p>只要析构函数抛出异常，程序可能过早结束或者发生不明确的行为。如果某个操作失败时会发生异常，则应该将这个操作移出析构函数放到另外一个函数里面，在析构函数里调用这个函数，此时析构函数应该捕捉任何异常，并且选择吞下它们不进行传播或者结束程序（abort函数）。</p>
-<h2 id="9、绝不在构造和析构过程中调用virtual函数"><a href="#9、绝不在构造和析构过程中调用virtual函数" class="headerlink" title="9、绝不在构造和析构过程中调用virtual函数"></a>9、绝不在构造和析构过程中调用virtual函数</h2><p>在构造和析构过程中调用virtual函数往往不会带来预期的结果。在派生类对象构造时，基类部分会先进行构造，如果基类的构造函数里调用了virtual函数，此时派生类部分还未初始化完成，因此这个函数不会下降到派生类去调用派生类里面的virtual函数，此时virtual函数的行为就像一个non-virtual函数一样，只是调用基类的，另一个根本原因是在派生类的基类部分构造期间，对象的类型就是基类而不是派生类，因此不存在多态。析构函数也一样，派生类优先于基类析构，如果此时析构函数调用了virtual函数，因为派生类部分已经被销毁了，调用派生类的virtual函数也是危险的。</p>
-<h2 id="10、令operator-返回一个reference-to-this"><a href="#10、令operator-返回一个reference-to-this" class="headerlink" title="10、令operator=返回一个reference to *this"></a>10、令operator=返回一个reference to *this</h2><p>为了实现连锁赋值，operator=应该返回一个指向左侧对象的引用。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line">	Widget&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Widget&amp; rhs)&#123;</span><br><span class="line">		...</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="11、在oprator-里处理自我赋值"><a href="#11、在oprator-里处理自我赋值" class="headerlink" title="11、在oprator=里处理自我赋值"></a>11、在oprator=里处理自我赋值</h2><p>由于多个指针或者引用可能指向同一个对象，所以对自我赋值需要特别注意。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span>&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Bitmap* pb;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line">	Widget&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Widget&amp; rhs)&#123;</span><br><span class="line">		<span class="keyword">delete</span> pb;</span><br><span class="line">		pb = <span class="keyword">new</span> Bitmap(*rhs.pb);</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>以上的代码未考虑自我赋值情况，如果*this和rhs是同一对象时，第一行的delete就已经将rhs释放掉了。可以加上一个测试以解决自我赋值：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Widget&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Widget&amp; rhs)&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="keyword">this</span> == &amp;rhs) <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	<span class="keyword">delete</span> pb;</span><br><span class="line">	pb = <span class="keyword">new</span> Bitmap(*rhs.pb);</span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>但是上面这个版本不具备异常安全，当new抛出异常时，bp指向的对象已经被释放了，所以返回的是一个指向已经被删除的指针，这种指针非常危险，下面是一个异常安全的做法：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Widget&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Widget&amp; rhs)&#123;</span><br><span class="line">	Bitmap* pOrigin = pb;		<span class="comment">//记住原来的pb</span></span><br><span class="line">	pb = <span class="keyword">new</span> Bitmap(*rhs.pb);	<span class="comment">//构造新的pb</span></span><br><span class="line">	<span class="keyword">delete</span> pOrigin;				<span class="comment">//释放旧的pb</span></span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>另一个方案是采用swap and copy：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Widget&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Widget&amp; rhs)&#123;</span><br><span class="line">	Widget temp(rhs);	<span class="comment">//copy rhs</span></span><br><span class="line">	swap(temp);			<span class="comment">//swap</span></span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;		</span><br><span class="line">&#125;<span class="comment">//temp对象析构，此时temp指向的原来的pb，被析构掉了</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="12、复制对象时勿忘其每一个成分"><a href="#12、复制对象时勿忘其每一个成分" class="headerlink" title="12、复制对象时勿忘其每一个成分"></a>12、复制对象时勿忘其每一个成分</h2><p>拷贝构造函数和赋值函数应该确保对每一个成员进行复制，特别是一个派生类的拷贝构造函数应该调用基类的构造函数来复制基类的部分。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span>&#123;</span>...&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span>:</span><span class="keyword">public</span> Base&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Derived(<span class="keyword">const</span> Derived&amp; rhs):Base(rhs)&#123;...&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>拷贝构造函数和赋值函数不应该互相调用对方，如果有相同的操作，应该放到第三个函数中，由两个函数调用。</p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2018/04/06/读书笔记-Effective-C/" data-id="cjg0trtbb000z1tjxzv1c1sha" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-编译原理学习笔记（五）代码生成" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/03/17/编译原理学习笔记（五）代码生成/">编译原理学习笔记（五）代码生成</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/03/17/编译原理学习笔记（五）代码生成/">
-            <time datetime="2018-03-17T14:04:17.000Z" itemprop="datePublished">2018-03-17</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><p>后端的第一步，对抽象语法树进行处理，生成一个或多个中间代码，最后生成机器能识别的目标代码。<br>有两个重要任务，第一是给源代码的数据分配资源，二是给源代码选择合适的指令。<br>资源有寄存器、数据区、代码区、栈、堆等。寄存器的存取速度最快，但是数量有限。<br>指令有算数运算、比较、跳转、函数调用返回等。不同的机器指令集也不同。</p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/" data-id="cjg0trtay000u1tjxrhducerh" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-编译原理学习笔记（四）语义分析" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/03/16/编译原理学习笔记（四）语义分析/">编译原理学习笔记（四）语义分析</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/03/16/编译原理学习笔记（四）语义分析/">
-            <time datetime="2018-03-17T04:25:54.000Z" itemprop="datePublished">2018-03-16</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h3 id="语义分析的任务"><a href="#语义分析的任务" class="headerlink" title="语义分析的任务"></a>语义分析的任务</h3><p>对抽象语法树进行分析，检查有无语义错误，上下文相关属性，如变量使用前是否声明，函数参数是否一致等。<br>需要两个输入，一个是语法树，一个是程序语言的语义。输出为中间代码。</p>
-<h3 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a>实现方法</h3><p>通过类型检查算法和符号表来实现检查。<br>类型检查算法用来检查每个表达式或语句的类型是什么，是否符合规范。</p>
-<h3 id="符号表"><a href="#符号表" class="headerlink" title="符号表"></a>符号表</h3><p>用来存储程序中各个变量的相关信息，如类型，作用域，访问控制信息，是一种key-value结构。<br>节省时间，可以用哈希表，节省空间，可以用红黑树。<br>符号表处理作用域的方法：一是用一张表，进入作用域就插入元素，离开作用域就删除元素，二是用多张表，构成一个栈，进入作用域就插入一张新表，离开就删除栈顶的表。<br>符号表处理名字空间的方法：引入标签，标号来区别不同类型。</p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2018/03/16/编译原理学习笔记（四）语义分析/" data-id="cjg0trtb5000w1tjxsqhirn3l" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-编译原理学习笔记（三）语法分析" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/03/14/编译原理学习笔记（三）语法分析/">编译原理学习笔记（三）语法分析</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/03/14/编译原理学习笔记（三）语法分析/">
-            <time datetime="2018-03-14T10:29:28.000Z" itemprop="datePublished">2018-03-14</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h3 id="语法分析的任务"><a href="#语法分析的任务" class="headerlink" title="语法分析的任务"></a>语法分析的任务</h3><p>语法分析接受词法分析产生的记号流，对其进行分析，检查有无语法错误，有错误返回错误信息，无错误则生成抽象语法树。</p>
-<p>语法分析还需要知道一组语法规则，利用这些规则来判断输入的记号流有无语法错误。</p>
-<h3 id="语法分析实现方式"><a href="#语法分析实现方式" class="headerlink" title="语法分析实现方式"></a>语法分析实现方式</h3><p>语法规则用上下文无关文法来描述。</p>
-<p>分析过程分为两类，自顶向下分析，自底向上分析。</p>
-<h3 id="自顶向下分析"><a href="#自顶向下分析" class="headerlink" title="自顶向下分析"></a>自顶向下分析</h3><p>有分析树，递归下降法和LL（1）分析算法。<br>分析树需要回溯，效率低。而递归下降和LL分析算法都是线性时间复杂度。</p>
-<p>递归下降的思想是每个非终结符构造一个分析函数，用一个前看符号来指导产生式规则的选择。<br>根据FIRST集和FOLLOW集来构造分析表，避免递归回溯</p>
-<p>LL（1）分析算法的意思是从左向右读入字符，从左推导，采用一个前看符号，是一种基于表驱动的分析算法。</p>
-<h3 id="自底向上分析"><a href="#自底向上分析" class="headerlink" title="自底向上分析"></a>自底向上分析</h3><p>LR分析算法。运行高效，有现成工具能用，如YACC，bison等。<br>LR（0）分析算法，核心思想是移进，归约，利用分析表产生一个逆序的最右推倒。<br>SLR和LR（1）都是对LR（0）的改进算法。</p>
-<h3 id="语法制导翻译"><a href="#语法制导翻译" class="headerlink" title="语法制导翻译"></a>语法制导翻译</h3><p>给每条产生式规则附加一个语义动作，当归约时，就执行这个动作进行计算，到所有的计算完成后，就可以得到结果。</p>
-<h3 id="抽象语法树"><a href="#抽象语法树" class="headerlink" title="抽象语法树"></a>抽象语法树</h3><p>与分析树非常类似，去除了无用的节点，是语法分析的最后一个过程，分析完毕后输出一个抽象语法树。<br>抽象语法树的数据结构和树类似，可以手工编码或者自动生成。</p>
-<p>自动生成的方法是在语法制导翻译时，语义动作就定义为语法树的构造函数，自底向上地构造树。</p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2018/03/14/编译原理学习笔记（三）语法分析/" data-id="cjg0trtah000a1tjxgovmeuvz" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-编译原理学习笔记（二）词法分析" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/03/12/编译原理学习笔记（二）词法分析/">编译原理学习笔记（二）词法分析</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/03/12/编译原理学习笔记（二）词法分析/">
-            <time datetime="2018-03-12T14:22:04.000Z" itemprop="datePublished">2018-03-12</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h3 id="词法分析的任务"><a href="#词法分析的任务" class="headerlink" title="词法分析的任务"></a>词法分析的任务</h3><p>词法分析是编译器中第一个模块，接收用户的输入（高级语言的源代码），生成一种内部的数据结构（记号流），交给下一个模块语法分析进行处理。</p>
-<p>源代码被看成是字符流，词法分析分析这些字符，产生记号流，记号流是编译器内部定义的一种数据结构。</p>
-<h3 id="词法分析的实现方式"><a href="#词法分析的实现方式" class="headerlink" title="词法分析的实现方式"></a>词法分析的实现方式</h3><p>分为手工编码和自动生成方式。<br>手工编码即为整个分析器都自己手动编写，由于细节很多，实现起来较为复杂。<br>自动生成方式为通过词法分析器的生成器来自动生成词法分析的代码。代码量比手工编码小，但不容易控制细节。</p>
-<h3 id="自动生成"><a href="#自动生成" class="headerlink" title="自动生成"></a>自动生成</h3><p>在自动生成的方式下，只需要输入一些声明式的规范，然后经过自动生成器，就可以产生词法分析器的代码。</p>
-<p>声明式的规范使用正则表达式来描述。</p>
-<p>词法分析器的代码使用有限状态自动机。分为确定有限状态自动机（DFA）和不确定有限状态自动机（NFA）。</p>
-<p>整个流程是从正则表达式转化为NFA，NFA转化为DFA，DFA最小化，最后生成词法分析器的代码。</p>
-<ul>
-<li>正则表达式–&gt;NFA：Thompson算法</li>
-<li>NFA–&gt;DFA：子集构造算法</li>
-<li>DFA最小化：Hopcroft算法</li>
-<li>DFA–&gt;词法分析器代码：转移表、哈希表、跳转表</li>
+            <h2 id="复合模式"><a href="#复合模式" class="headerlink" title="复合模式"></a>复合模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>结合两个或以上的模式，组成一个解决方案，解决一再发生的一般性问题。</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p>MVC：<br><img src="https://s1.ax1x.com/2018/05/09/CdoBJe.jpg" alt="CdoBJe.jpg"></p>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>MVC：同一个模型可以适用于多个视图，三层解耦，各自不需要知道具体实现，针对接口编程，分工明确。</p>
+<h3 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h3><ul>
+<li>封装变化</li>
+<li>多用组合，少用继承</li>
+<li>针对接口编程，不针对实现编程</li>
+<li>为交互对象之间的松耦合设计而努力</li>
+<li>类应该对扩展开放，对修改关闭，开放关闭原则</li>
+<li>依赖抽象，不要依赖具体类</li>
+<li>只和朋友交谈，最少知识原则</li>
+<li>别找我，我会找你，依赖倒置原则</li>
+<li>类应该只有一个改变的理由，单一责任原则</li>
 </ul>
 
         
@@ -1240,7 +243,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/12/编译原理学习笔记（二）词法分析/" data-id="cjg0trtop00141tjx7xa9xplt" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/mvc/" data-id="cjgybwwbd000cq6jxqpjk0mqg" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1316,7 +319,7 @@
 
 
 
-    <article id="post-编译原理学习笔记（一）" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-agen" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -1324,7 +327,7 @@
                 
     
         <h1 itemprop="name">
-            <a class="article-title" href="/2018/03/11/编译原理学习笔记（一）/">编译原理学习笔记（一）概述</a>
+            <a class="article-title" href="/2018/05/08/agen/">设计模式之代理模式</a>
         </h1>
     
 
@@ -1333,8 +336,8 @@
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/03/11/编译原理学习笔记（一）/">
-            <time datetime="2018-03-11T13:43:40.000Z" itemprop="datePublished">2018-03-11</time>
+        <a href="/2018/05/08/agen/">
+            <time datetime="2018-05-08T23:50:32.000Z" itemprop="datePublished">2018-05-08</time>
         </a>
     </div>
 
@@ -1343,7 +346,7 @@
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/编译原理/">编译原理</a>
+        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
     </div>
 
                     </div>
@@ -1354,19 +357,10 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h3 id="什么是编译器"><a href="#什么是编译器" class="headerlink" title="什么是编译器"></a>什么是编译器</h3><p>编译器是一类程序，用来将高级语言的源代码转化成机器能够识别的目标代码。</p>
-<h3 id="什么是解释器"><a href="#什么是解释器" class="headerlink" title="什么是解释器"></a>什么是解释器</h3><p>解释器也是用来解析高级语言的，将源代码转化成对应的结果输出。</p>
-<h3 id="上述二者的区别"><a href="#上述二者的区别" class="headerlink" title="上述二者的区别"></a>上述二者的区别</h3><p>输入相同，输出不同，解释器直接输出程序的结果，而编译器先生成中间代码然后再生成可执行的目标代码。</p>
-<h3 id="编译器的模块构成"><a href="#编译器的模块构成" class="headerlink" title="编译器的模块构成"></a>编译器的模块构成</h3><p>编译器是由多个功能模块构成的流水线结构。</p>
-<ul>
-<li>词法分析：将源程序看作一个字符流，处理得到记号流。</li>
-<li>语法分析：处理记号流，生成抽象语法树。</li>
-<li>语义分析：对语法树进行语义检查，保证合法性。</li>
-<li>中间代码生成：根据语义分析器的输出生成中间代码。具体代码和机器类型有关。</li>
-<li>中间代码优化：相关的优化工作。</li>
-<li>目标代码生成：与机器的指令相关。</li>
-</ul>
-<p>编译器和解释器都包括前3个模块，而解释器的第四部直接输出程序结果。<br><img src="https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1520783238335&amp;di=2938587d75ddd0cd8a2dc9605d02443c&amp;imgtype=0&amp;src=http%3A%2F%2Fimages2017.cnblogs.com%2Fblog%2F963156%2F201709%2F963156-20170924112159321-1357949569.jpg" alt="c"></p>
+            <h2 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>为另一个对象提供一个替身或占位符以控制对这个对象的访问。</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><img src="https://s1.ax1x.com/2018/05/09/Cdo8z9.jpg" alt="Cdo8z9.jpg"></p>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>和客户直接打交道的不是服务本身，而是一个替身，但是客户不知道，以为他在和真正的服务打交道，这样做增加一层间接性，替身可以做很多事，比如控制访问，缓存，显示，而服务只需要关注服务本身，体现了单一责任原则。</p>
+<p>一些例子，远程代理，虚拟代理，保护代理，缓存代理。</p>
 
         
         </div>
@@ -1377,7 +371,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/11/编译原理学习笔记（一）/" data-id="cjg0trtac00081tjx0y0fxldy" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/agen/" data-id="cjgybww9k0000q6jxirhof0lc" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1453,7 +447,7 @@
 
 
 
-    <article id="post-tcp的三次握手和四次挥手" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-state" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -1461,7 +455,7 @@
                 
     
         <h1 itemprop="name">
-            <a class="article-title" href="/2018/02/25/tcp的三次握手和四次挥手/">tcp的三次握手和四次挥手</a>
+            <a class="article-title" href="/2018/05/08/state/">设计模式之状态模式</a>
         </h1>
     
 
@@ -1470,8 +464,8 @@
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/02/25/tcp的三次握手和四次挥手/">
-            <time datetime="2018-02-26T06:36:18.000Z" itemprop="datePublished">2018-02-25</time>
+        <a href="/2018/05/08/state/">
+            <time datetime="2018-05-08T23:49:52.000Z" itemprop="datePublished">2018-05-08</time>
         </a>
     </div>
 
@@ -1480,7 +474,7 @@
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/网络编程/">网络编程</a>
+        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
     </div>
 
                     </div>
@@ -1491,22 +485,10 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p>三次握手发生在客户端和服务器建立连接的阶段。流程如下：</p>
-<ul>
-<li>客户端向服务器发送一个同步报文SYN i</li>
-<li>服务器向客户端响应一个报文SYN j，同时对SYN i进行确认ACK i+1</li>
-<li>客户端再向服务器发送一个确认报文ACK j+1<br>如下图：<br><img src="http://n1.cmsfile.pg0.cn/group1/M00/1A/7E/Cgqg2FZAQK-AKig6AAB4dr6gkoY992.jpg" alt="tcp3"><h4 id="为什么需要三次握手"><a href="#为什么需要三次握手" class="headerlink" title="为什么需要三次握手"></a>为什么需要三次握手</h4>防止已经失效的连接请求突然又传到服务器，因而产生错误。假设客户端向服务器发送第一个连接请求，但这个请求丢失了，服务器没有接收到，于是客户端向服务器发送第二个连接请求，这次正常建立了连接，交换完数据后关闭连接，而此时第一个丢失的连接请求又到达了服务器，服务器以为是客户端又重新发起了连接，于是向客户端发送响应报文，如果只有前两次握手，则服务器不等客户端回应就建立连接，等待客户端的数据，而这次连接是之前失效的连接，并不是客户端发起的连接，因而客户端也就没有数据传输，服务器就一直等待客户端，造成了服务器资源的浪费。若采用三次握手即可解决此问题，服务器要接收到客户端的第三次握手才会建立连接，而此次连接是无效的，因此客户端不会向服务器发起第三次握手，因此连接不会建立。</li>
-</ul>
-<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p>四次挥手发生在客户端和服务器关闭连接的阶段。流程如下：</p>
-<ul>
-<li>客户端主动关闭，向服务器发送一个FIN</li>
-<li>服务器接受到FIN，对这个FIN进行确认，发送ACK</li>
-<li>服务器向客户端也发送一个FIN</li>
-<li>客户端对服务器的FIN进行确认<br>如下图：<br><img src="http://cimage.tianjimedia.com/uploadImages/20151109135259104003.jpg" alt="tcp4"><h4 id="为什么需要四次挥手"><a href="#为什么需要四次挥手" class="headerlink" title="为什么需要四次挥手"></a>为什么需要四次挥手</h4>TCP连接是全双工的，数据可以双向传递，因此每个方向必须单独进行关闭。关闭连接时，服务器可能还有数据要发送，不能立即关闭连接，因此先发送一个ACK，等所有数据发送完，再向客户端发送FIN。</li>
-</ul>
-<h3 id="TIME-WAIT状态"><a href="#TIME-WAIT状态" class="headerlink" title="TIME_WAIT状态"></a>TIME_WAIT状态</h3><p>首先发起主动关闭的一方，在发送最后一个ACK之后会进入time_wait的状态，也就说该发送方会保持2MSL时间之后才会回到初始状态。MSL值是数据包在网络中的最大生存时间。产生这种结果使得这个TCP连接在2MSL连接等待期间，定义这个连接的四元组（客户端IP地址和端口，服务端IP地址和端口号）不能被使用。</p>
-<h4 id="为什么需要TIME-WAIT状态"><a href="#为什么需要TIME-WAIT状态" class="headerlink" title="为什么需要TIME_WAIT状态"></a>为什么需要TIME_WAIT状态</h4><p>1、假设客户端最后发送的ACK在网络上丢失，服务器没收到ACK向客户端重新发送FIN，因此客户端必须保持连接以发送ACK确认报文，这保证了TCP连接的可靠关闭。<br>2、假设没有TIME_WAIT状态，一个客户端关闭连接后又有一个新的客户端以相同的ip地址和端口号建立连接，此时在服务器看来，第二个客户端即为第一个客户端，因为TCP协议栈是无法区分前后两条TCP连接的不同的，因此会发生这种现象，前一个客户端发送给服务器的数据和后一个客户端发送的数据产生了混乱，会产生不可预期的后果。因此TIME_WAIT的第二个作用是使旧的数据包在网络上因为过期而消失。</p>
-<p>最后，tcp的状态转移图：<br><img src="http://www.cnitblog.com/images/cnitblog_com/wildon/544465b00200001s.png" alt="tcp"></p>
+            <h2 id="状态模式"><a href="#状态模式" class="headerlink" title="状态模式"></a>状态模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类。</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><img src="https://s1.ax1x.com/2018/05/08/CdceAA.jpg" alt="CdceAA.jpg"></p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">State</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">insertQuarter</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">ejectQuarter</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">turnCrank</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">dispense</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NoQuarterState</span> :</span><span class="keyword">public</span> State &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	GumballMachine* machine;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	NoQuarterState(GumballMachine* m) :machine(m) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">insertQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"you insert a coin"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">		machine-&gt;setState(machine-&gt;getHasQuarterState());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">ejectQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Error"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">turnCrank</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Error"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">dispense</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Error"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HasQuarterState</span> :</span><span class="keyword">public</span> State &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	GumballMachine* machine;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	HasQuarterState(GumballMachine* m) :machine(m) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">insertQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Error"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">ejectQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"coin return"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">		machine-&gt;setState(machine-&gt;getNoQuarterState());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">turnCrank</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"turn crank"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">		machine-&gt;setState(machine-&gt;getSoldState());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">dispense</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Error"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SoldState</span> :</span><span class="keyword">public</span> State &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	GumballMachine* machine;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	SoldState(GumballMachine* m) :machine(m) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">insertQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Error"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">ejectQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Error"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">turnCrank</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Error"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">dispense</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		machine-&gt;releaseBall();</span><br><span class="line">		<span class="keyword">if</span> (machine-&gt;getCount() &gt; <span class="number">0</span>)&#123;</span><br><span class="line">			machine-&gt;setState(machine-&gt;getNoQuarterState());</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			machine-&gt;setState(machine-&gt;getSoldOutState());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SoldOutState</span> :</span><span class="keyword">public</span> State &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	GumballMachine* machine;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	SoldOutState(GumballMachine* m) :machine(m) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">insertQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Sold out"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">ejectQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Sold out"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">turnCrank</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Sold out"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">dispense</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Sold out"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GumballMachine</span> &#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	State* noQuarterState;</span><br><span class="line">	State* hasQuarterState;</span><br><span class="line">	State* soldState;</span><br><span class="line">	State* soldoutState;</span><br><span class="line">	State* state;</span><br><span class="line">	<span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	GumballMachine(<span class="keyword">int</span> num) :</span><br><span class="line">		noQuarterState(<span class="keyword">new</span> NoQuarterState(<span class="keyword">this</span>)),</span><br><span class="line">		hasQuarterState(<span class="keyword">new</span> HasQuarterState(<span class="keyword">this</span>)),</span><br><span class="line">		soldState(<span class="keyword">new</span> SoldState(<span class="keyword">this</span>)),</span><br><span class="line">		soldoutState(<span class="keyword">new</span> SoldOutState(<span class="keyword">this</span>)),</span><br><span class="line">		state(noQuarterState),</span><br><span class="line">		count(num)</span><br><span class="line">	&#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">insertQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		state-&gt;insertQuarter();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">ejectQuarter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		state-&gt;ejectQuarter();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">turnCrank</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		state-&gt;turnCrank();</span><br><span class="line">		state-&gt;dispense();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">setState</span><span class="params">(State* s)</span> </span>&#123;</span><br><span class="line">		state = s;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">releaseBall</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"a ball comes out!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">		<span class="keyword">if</span> (count != <span class="number">0</span>) &#123;</span><br><span class="line">			--count;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function">State* <span class="title">getNoQuarterState</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> noQuarterState; &#125;</span><br><span class="line">	<span class="function">State* <span class="title">getHasQuarterState</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> hasQuarterState; &#125;</span><br><span class="line">	<span class="function">State* <span class="title">getSoldState</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> soldState; &#125;</span><br><span class="line">	<span class="function">State* <span class="title">getSoldOutState</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> soldoutState; &#125;</span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> count; &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>将一堆if的状态判断语句换成一堆状态类，每一个类代表一个状态，一个类只处理自己的状态，将代码分开，不容易出错，且容易扩展。</p>
 
         
         </div>
@@ -1517,7 +499,903 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/02/25/tcp的三次握手和四次挥手/" data-id="cjg0trta300051tjxkhrwwdj1" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/state/" data-id="cjgybwwca000rq6jxxpo9m0aj" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-composite" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/05/08/composite/">设计模式之组合模式</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/05/08/composite/">
+            <time datetime="2018-05-08T23:49:10.000Z" itemprop="datePublished">2018-05-08</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="组合模式"><a href="#组合模式" class="headerlink" title="组合模式"></a>组合模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>允许你将对象组合成树形结构来表现“整体/部分”层次结构，组合能让客户以一致的方式处理个别对象以及对象组合。</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><a href="https://imgchr.com/i/Cdr9sJ" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2018/05/08/Cdr9sJ.md.jpg" alt="Cdr9sJ.md.jpg"></a></p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MenuComponent</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(MenuComponent*)</span> </span>&#123;&#125;;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(MenuComponent*)</span> </span>&#123;&#125;;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> MenuComponent* <span class="title">getChild</span><span class="params">(<span class="keyword">int</span>)</span> </span>&#123; <span class="keyword">return</span> <span class="literal">nullptr</span>; &#125;;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="built_in">string</span> <span class="title">getName</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">string</span>(); &#125;;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MenuItem</span> :</span><span class="keyword">public</span> MenuComponent &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="built_in">string</span> name;</span><br><span class="line">	<span class="keyword">double</span> price;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	MenuItem(<span class="built_in">string</span> n, <span class="keyword">double</span> p) :name(n), price(p) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="built_in">string</span> <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> name;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; getName() &lt;&lt; <span class="string">"----"</span> &lt;&lt; to_string(price) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Menu</span> :</span><span class="keyword">public</span> MenuComponent &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="built_in">vector</span>&lt;MenuComponent*&gt; components;</span><br><span class="line">	<span class="built_in">string</span> name;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Menu(<span class="built_in">string</span> n) :name(n) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(MenuComponent* component)</span> </span>&#123;</span><br><span class="line">		components.push_back(component);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(MenuComponent* component)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">auto</span> it = find(components.begin(), components.end(), component);</span><br><span class="line">		<span class="keyword">if</span> (it != components.end()) &#123;</span><br><span class="line">			components.erase(it);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function">MenuComponent* <span class="title">getChild</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (index &lt; components.size()) &#123;</span><br><span class="line">			<span class="keyword">return</span> components[index];</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="built_in">string</span> <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> name;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; getName() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"----------------------"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> it = components.begin(); it != components.end(); ++it) &#123;</span><br><span class="line">			(*it)-&gt;print();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Waitress</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Waitress(MenuComponent* m) :menu(m) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">printMenu</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		menu-&gt;print();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	MenuComponent* menu;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>将集合和个体组合成树形结构，叶子节点是个体，非叶子节点是集合，集合包含多个个体，也就是包含多个叶子节点，这样对集合和个体提供一致的访问方式。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/05/08/composite/" data-id="cjgybwwao0004q6jxdb6njazj" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-iterator" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/05/08/iterator/">设计模式之迭代器模式</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/05/08/iterator/">
+            <time datetime="2018-05-08T23:48:31.000Z" itemprop="datePublished">2018-05-08</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="迭代器模式"><a href="#迭代器模式" class="headerlink" title="迭代器模式"></a>迭代器模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>提供一种方法顺序访问一个聚合对象中的各个元素，而又不暴露其内部的表示。</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><img src="https://s1.ax1x.com/2018/05/08/Cd9qr8.jpg" alt="Cd9qr8.jpg"></p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>略</p>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>用一个统一的接口访问不同的聚合对象（容器），不用知道对象其内部怎么实现，只需要用迭代器一个一个取出元素即可。迭代器由这个对象构造出来，因为只有这个对象知道该如何访问自己。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/05/08/iterator/" data-id="cjgybwwb9000aq6jxi3xorc53" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-template" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/05/08/template/">设计模式之模板方法模式</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/05/08/template/">
+            <time datetime="2018-05-08T23:47:52.000Z" itemprop="datePublished">2018-05-08</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="模板方法模式"><a href="#模板方法模式" class="headerlink" title="模板方法模式"></a>模板方法模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>在一个方法中定义一个算法的骨架，将一些步骤延迟到子类中，模板方法使得子类可以在不改变算法结构的情况下，重新定义算法中的某些步骤。</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><img src="https://s1.ax1x.com/2018/05/08/CahYdg.jpg" alt="CahYdg.jpg"></p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CaffeineBeverage</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">prepareRecipe</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"**********************"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"prepare...."</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">		boilWater();</span><br><span class="line">		pourInCup();</span><br><span class="line">		brew();</span><br><span class="line">		addCondiments();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">boilWater</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"boil water"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">pourInCup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"pour in cup"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">brew</span><span class="params">()</span> </span>&#123;&#125;;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">addCondiments</span><span class="params">()</span> </span>&#123;&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Coffee</span> :</span><span class="keyword">public</span> CaffeineBeverage &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">brew</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"dripping coffee"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">addCondiments</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"adding sugar and milk"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Tea</span> :</span><span class="keyword">public</span> CaffeineBeverage &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">brew</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"steeping the coffee"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">addCondiments</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"adding lemon"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>在接口中定义一个算法的框架，分为多个步骤，子类可以改变其中的某些步骤。STL中的很多算法都可以传入自定义的比较函数，此即为模板方法模式。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/05/08/template/" data-id="cjgybwwch000uq6jxtm6elrtf" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-show" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/05/08/show/">设计模式之外观模式</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/05/08/show/">
+            <time datetime="2018-05-08T23:47:16.000Z" itemprop="datePublished">2018-05-08</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="外观模式"><a href="#外观模式" class="headerlink" title="外观模式"></a>外观模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>提供了一个统一的接口，用来访问子系统中的一群接口，外观定义了一个高层接口，让子系统更容易使用。</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><img src="https://s1.ax1x.com/2018/05/08/CahMRI.jpg" alt="CahMRI.jpg"></p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>略</p>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>将很长的复杂方法用一个方法封装起来，简化接口。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/05/08/show/" data-id="cjgybwwbn000hq6jx75kwltg1" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-adapter" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/05/08/adapter/">设计模式之适配器模式</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/05/08/adapter/">
+            <time datetime="2018-05-08T23:46:22.000Z" itemprop="datePublished">2018-05-08</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>将一个类的接口，转换成客户期望的另一个接口。适配器让原本不兼容的类可以合作无间。</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><img src="https://s1.ax1x.com/2018/05/08/Cahuid.jpg" alt="Cahuid.jpg"></p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Duck</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">quack</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MallardDuck</span> :</span><span class="keyword">public</span> Duck &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">quack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"MallardDuck quack!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"MallardDuck fly!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Turkey</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">gobble</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Turkey gobble!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">flyShort</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Turkey fly!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TurkeyAdapter</span> :</span><span class="keyword">public</span> Duck &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">quack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		turkey-&gt;gobble();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		turkey-&gt;flyShort();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Turkey* turkey;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>适配器持有一个被适配者，适配器的接口和适配目标的接口是一样的，当调用适配目标的接口时，适配器转而调用被适配者的对应方法。也就是说适配器拥有一个被适配对象，就可以为所欲为！</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/05/08/adapter/" data-id="cjgybww9y0001q6jxponcpmrx" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-command" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/05/08/command/">设计模式之命令模式</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/05/08/command/">
+            <time datetime="2018-05-08T23:45:26.000Z" itemprop="datePublished">2018-05-08</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>将请求封装成对象，以便使用不同的请求、队列或者日志来参数化其他对象。命令模式支持可撤销操作。</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><img src="https://s1.ax1x.com/2018/05/08/CahAsK.jpg" alt="CahAsK.jpg"></p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Light</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">on</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Light on!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">off</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"light off!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Door</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">open</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Door open!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Door close!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Command</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">undo</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LightOnCommand</span> :</span><span class="keyword">public</span> Command &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	LightOnCommand(Light* li) :light(li) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		light-&gt;on();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">undo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		light-&gt;off();</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Light* light;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LightOffCommand</span> :</span><span class="keyword">public</span> Command &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	LightOffCommand(Light* li) :light(li) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		light-&gt;off();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">undo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		light-&gt;on();</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Light* light;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DoorOpenCommand</span> :</span><span class="keyword">public</span> Command &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	DoorOpenCommand(Door* doo) :door(doo) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		door-&gt;open();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">undo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		door-&gt;close();</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Door* door;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DoorCloseCommand</span> :</span><span class="keyword">public</span> Command &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	DoorCloseCommand(Door* doo) :door(doo) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		door-&gt;close();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">undo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		door-&gt;open();</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Door* door;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RemoteControl</span> &#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Command* onCommand;</span><br><span class="line">	Command* offCommand;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	RemoteControl() :onCommand(<span class="literal">nullptr</span>), offCommand(<span class="literal">nullptr</span>) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">setCommand</span><span class="params">(Command* onCommand, Command* offCommand)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>-&gt;offCommand = offCommand;</span><br><span class="line">		<span class="keyword">this</span>-&gt;onCommand = onCommand;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">onButtonPushed</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (onCommand) &#123;</span><br><span class="line">			onCommand-&gt;execute();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">offButtonPushed</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (offCommand) &#123;</span><br><span class="line">			offCommand-&gt;execute();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>利用command接口，每个动作都继承这个接口成为一个命令对象，命令对象持有一个执行命令的实体，当该动作执行时，命令对象直接调用执行者的对应动作。有利于动作扩展，新动作只要继承command接口就行。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/05/08/command/" data-id="cjgybwwac0003q6jxrghgqc4g" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-singleton" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/05/08/singleton/">设计模式之单件模式</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/05/08/singleton/">
+            <time datetime="2018-05-08T23:44:44.000Z" itemprop="datePublished">2018-05-08</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="单件模式"><a href="#单件模式" class="headerlink" title="单件模式"></a>单件模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>确保一个类只有一个实例，并提供一个全局访问点。</p>
+<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><img src="https://s1.ax1x.com/2018/05/08/CahCGR.jpg" alt="CahCGR.jpg"></p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">static</span> Singleton* <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (instance == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">			instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"singleton:hello"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Singleton() &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> Singleton* instance;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//线程安全</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">static</span> Singleton* <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (instance == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">			lock.lock();</span><br><span class="line">			instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">			lock.unlock();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"singleton:hello"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Singleton() &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> Singleton* instance;</span><br><span class="line">	<span class="keyword">static</span> MutexLock lock;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>相当于全局变量，只有一个实例，全局共享，只能通过函数来取得实例，将构造函数声明为私有,有必要的话，将拷贝构造和赋值也声明为私有。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/05/08/singleton/" data-id="cjgybwwbr000kq6jxmvygsp6n" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1594,7 +1472,7 @@
 
 
     <nav id="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
     </nav>
 </section>
             
@@ -1611,8 +1489,8 @@
                         
                         <div class="item-inner">
                             <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/04/15/effective4/" class="title">读书笔记 Effective C++(4)</a></p>
-                            <p class="item-date"><time datetime="2018-04-15T13:06:19.000Z" itemprop="datePublished">2018-04-15</time></p>
+                            <p class="item-title"><a href="/2018/05/08/mvc/" class="title">设计模式之复合模式</a></p>
+                            <p class="item-date"><time datetime="2018-05-08T23:51:05.000Z" itemprop="datePublished">2018-05-08</time></p>
                         </div>
                     </li>
                 
@@ -1620,8 +1498,8 @@
                         
                         <div class="item-inner">
                             <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/04/07/effective3/" class="title">读书笔记 Effective C++(3)</a></p>
-                            <p class="item-date"><time datetime="2018-04-07T12:34:53.000Z" itemprop="datePublished">2018-04-07</time></p>
+                            <p class="item-title"><a href="/2018/05/08/agen/" class="title">设计模式之代理模式</a></p>
+                            <p class="item-date"><time datetime="2018-05-08T23:50:32.000Z" itemprop="datePublished">2018-05-08</time></p>
                         </div>
                     </li>
                 
@@ -1629,8 +1507,8 @@
                         
                         <div class="item-inner">
                             <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/04/06/effectiveC-2/" class="title">读书笔记 Effective C++(2)</a></p>
-                            <p class="item-date"><time datetime="2018-04-07T03:16:59.000Z" itemprop="datePublished">2018-04-06</time></p>
+                            <p class="item-title"><a href="/2018/05/08/state/" class="title">设计模式之状态模式</a></p>
+                            <p class="item-date"><time datetime="2018-05-08T23:49:52.000Z" itemprop="datePublished">2018-05-08</time></p>
                         </div>
                     </li>
                 
@@ -1638,8 +1516,8 @@
                         
                         <div class="item-inner">
                             <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/04/06/读书笔记-Effective-C/" class="title">读书笔记 Effective C++</a></p>
-                            <p class="item-date"><time datetime="2018-04-06T08:56:42.000Z" itemprop="datePublished">2018-04-06</time></p>
+                            <p class="item-title"><a href="/2018/05/08/composite/" class="title">设计模式之组合模式</a></p>
+                            <p class="item-date"><time datetime="2018-05-08T23:49:10.000Z" itemprop="datePublished">2018-05-08</time></p>
                         </div>
                     </li>
                 
@@ -1647,8 +1525,8 @@
                         
                         <div class="item-inner">
                             <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/03/17/编译原理学习笔记（五）代码生成/" class="title">编译原理学习笔记（五）代码生成</a></p>
-                            <p class="item-date"><time datetime="2018-03-17T14:04:17.000Z" itemprop="datePublished">2018-03-17</time></p>
+                            <p class="item-title"><a href="/2018/05/08/iterator/" class="title">设计模式之迭代器模式</a></p>
+                            <p class="item-date"><time datetime="2018-05-08T23:48:31.000Z" itemprop="datePublished">2018-05-08</time></p>
                         </div>
                     </li>
                 
@@ -1663,7 +1541,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">3</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">3</span></li></ul>
         </div>
     </div>
 
@@ -1672,7 +1550,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译原理/">编译原理</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络编程/">网络编程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a><span class="tag-list-count">4</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译原理/">编译原理</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络编程/">网络编程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a><span class="tag-list-count">18</span></li></ul>
         </div>
     </div>
 
