@@ -152,11 +152,11 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                26
+                27
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                6
+                7
                 <span>标签</span>
             </div>
         </div>
@@ -181,6 +181,262 @@
 
             
             <section id="main">
+    <article id="post-redis" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/07/28/redis/">Redis简介</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/07/28/redis/">
+            <time datetime="2018-07-28T07:46:32.000Z" itemprop="datePublished">2018-07-28</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/数据库/">数据库</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="Redis简介"><a href="#Redis简介" class="headerlink" title="Redis简介"></a>Redis简介</h2><p>Redis是一个高效的键值对内存数据库。</p>
+<h2 id="基本数据结构"><a href="#基本数据结构" class="headerlink" title="基本数据结构"></a>基本数据结构</h2><p>简单动态字符串（SDS）、链表、字典、跳跃表、整数集合、压缩列表。基于这些数据结构实现了Redis的5种存储类型，分别是字符串、哈希、列表、有序集合、集合，每种类型底层有多种数据结构实现方法，根据应用场景不同而变化。</p>
+<h3 id="SDS"><a href="#SDS" class="headerlink" title="SDS"></a>SDS</h3><p>长度可变，当进行扩展时，除了分配所需的空间外，还分配额外的未使用空间，有效减少内存重分配次数，释放时不真正释放，采用惰性释放，用free字段记录这些字节。</p>
+<h3 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h3><p>用哈希表实现：用链式地址法解决键冲突，具有相同哈希值的键用一个链表存储起来，将新节点添加到链表的头节点位置。</p>
+<p>当哈希表的键值对太多或太少时，会进行相应的扩展或收缩，内部有两个哈希结构，记为ht[0]和ht[1]，平常只用到ht[0]用来存储键值对，当要扩展时，首先将ht[1]的大小设为第一个大于等于ht[0].used*2的2的n次方，收缩时，将ht[1]的大小设为第一个大于等于ht[0].used的2的n次方，然后将ht[0]里的键值对rehash到ht[1]中，释放ht[0]，将ht[0]设为ht[1]，ht[1]设为ht[0]，并在ht[1]创建一个空哈希表为下一次rehash准备。决定是否要扩展或者收缩根据负载因子（used/size）确定。当键值对非常多，一次rehash会占用相当长的时间，导致服务器停止服务，因此实际上rehash时分多次、渐进式的完成的。具体来说，在字典中维护一个rehashidx变量，从0开始计数，在每次对字典进行查找删除添加的时候，将rehashidx这一索引上的键值对全部rehash到ht[1]中，相当于在每次操作之后rehash一行键值对，然后rehashidx加1，下次操作rehash下一行，如此rehash完所有行后将rehashidx设为-1表示rehash操作已完成。这么做的好处是将所有工作均摊到每一次操作上，避免了一次性rehash的庞大计算。此外，在rehash期间进行的删除查找操作会在两个表上查找，而添加操作一律添加到ht[1]中。</p>
+<h3 id="跳跃表"><a href="#跳跃表" class="headerlink" title="跳跃表"></a>跳跃表</h3><p>平均O（logn），最坏O（n）的查找。是有序集合的基本数据结构。</p>
+<h3 id="整数集合"><a href="#整数集合" class="headerlink" title="整数集合"></a>整数集合</h3><p>底层实现是数组，保存整数。数组有个类型，当新加入的数比这个类型长时，数组会进行升级。只有在必要时才进行升级，尽可能节约了内存。</p>
+<h3 id="压缩列表"><a href="#压缩列表" class="headerlink" title="压缩列表"></a>压缩列表</h3><p>压缩列表节约内存。可以包含多个节点，每个节点保存一个字节数组或者用一个整数值。添加或者删除节点，可能引发连锁更新操作，出现几率并不高。</p>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>底层编码可以是int、raw(SDS)、embstr。embstr是专门保存短字符串的优化编码方式，当字符串长度小于等于39会采用。</p>
+<p>命令：set、get、append、incrby、decrby、……</p>
+<h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h3><p>编码可以是压缩列表和双向链表，内部会嵌套字符串对象。当所有字符串长度小于64且元素数量小于512用跳跃表，否则用链表。</p>
+<p>命令：lpush、rpush、lrange、lpop、rpop、……</p>
+<h3 id="哈希"><a href="#哈希" class="headerlink" title="哈希"></a>哈希</h3><p>编码可以是压缩列表和哈希表。转化条件和列表一样。</p>
+<p>命令：hset、hget、hexists、hmset、hmget、hgatall……</p>
+<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>编码可以是整数集合或者哈希表。当元素都为整数且数目不超过512个用整数集合，否则哈希表。</p>
+<p>命令：sadd、smembers、spop……</p>
+<h3 id="有序集合"><a href="#有序集合" class="headerlink" title="有序集合"></a>有序集合</h3><p>编码可以是压缩列表和跳跃表。字典提供O(1)的查找复杂度，而跳跃表提供快速的范围操作。当元素数量小于128个，且长度都小于64字节时用压缩列表。</p>
+<p>命令：zadd、zrange、zrank、zscore……</p>
+<h3 id="内存回收"><a href="#内存回收" class="headerlink" title="内存回收"></a>内存回收</h3><p>基于引用计数的内存回收。当计数为0释放内存。此外当一个对象同时被两个键引用时，还会进行共享，即对象只有一份，引用计数为2，节约内存。目前Redis会在初始化服务器时创建0到9999的所有整数作为共享对象。</p>
+<h3 id="空转时长"><a href="#空转时长" class="headerlink" title="空转时长"></a>空转时长</h3><p>对象里还有一个lru属性，记录了对象最后一次被命令访问的时间，当前时间减去lru即时空转时长，空转时长较高的键会被释放，回收内存。</p>
+<h2 id="单机数据库"><a href="#单机数据库" class="headerlink" title="单机数据库"></a>单机数据库</h2><h3 id="数据库基本数据结构"><a href="#数据库基本数据结构" class="headerlink" title="数据库基本数据结构"></a>数据库基本数据结构</h3><p>数据库的结构为redisServer：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">struct redisServer&#123;</span><br><span class="line">	...</span><br><span class="line">	redisDb * db; //保存所有的数据库</span><br><span class="line">	int dbnum;    //数据库的数量</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>默认情况下，数据库有16个，启动时默认选择0号数据库，可以用select命令选择数据库：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select 2</span><br></pre></td></tr></table></figure></p>
+<p>变化的是客户端数据库，服务器的数据库总是从0开始。<br>dict字典保存了所有键值对：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">struct redisServer&#123;</span><br><span class="line">	...</span><br><span class="line">	dict* dict;    //保存所有键值对</span><br><span class="line">	dict* expires; //保存所有键的过期时间</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以用expire为键设置过期时间，时间到自动删除。expires字典保存了所有键的过期时间，值为longlong，是一个毫秒精度的unix时间戳。persist可以移除一个键的过期时间。对于过期键的删除策略，有以下三种方式：</p>
+<ul>
+<li>定时删除：设置键过期时间时设置一个定时器，时间到了进行删除。</li>
+<li>惰性删除：不主动删除，获取键的时候判断是否过期，如果过期再删除。</li>
+<li>定期删除：每隔一段时间，对数据库进行检查，删除其中的过期键。</li>
+</ul>
+<p>定时删除对内存最友好，因为可以第一时间删除过期的键，但是对cpu不友好，每次都需要占用cpu时间，删除时需要处理与当前无关的键。惰性删除是对cpu最友好的，每次只对查询的键做处理，如果过期才删除，同时对内存最不友好，因为存在大量过期的无用的键没有及时删除占用内存。定期删除是一种折中方案，难点是确定删除的时长和频率。Redis使用的是惰性删除和定期删除两种策略。定期删除是在服务器的周期性操作serverCron执行时进行的，每次运行时，从一定数量的数据库中随机取出一定数量的随机键进行检查，删除其中的过期键，每轮检查有一个时间，时间到了则停止检查，记录下此时检查到第几个数据库，下次继续从这个数据库开始检查过期键。</p>
+<h3 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h3><p>Redis是内存数据库，数据都存储在内存中，如果服务器退出，内存中的数据就都丢失了，因此需要将数据保存在本地磁盘上，称为持久化。分为RDB持久化和AOF持久化。</p>
+<h4 id="RDB持久化"><a href="#RDB持久化" class="headerlink" title="RDB持久化"></a>RDB持久化</h4><p>RDB文件是一个经过压缩的二进制文件。save和bgsave命令会生成RDB文件，save会阻塞服务器直到文件写入完成，而bgsave会创建子进程来写文件，服务器能够继续正常运行，子进程完成后向父进程发送信号。服务器启动时自动读取RDB文件恢复数据库内容，读取是阻塞的。通过配置文件的save选项，若一段时间内执行了一定次数的写操作，则服务器可以自动进行bgsave命令来保存RDB文件。RDB文件由5部分组成：<br>|REDIS|db_version|databases|EOF||check_sum|</p>
+<p>对于不同的键值对，会用不同的方式保存。</p>
+<h4 id="AOF持久化"><a href="#AOF持久化" class="headerlink" title="AOF持久化"></a>AOF持久化</h4><p>RDB文件保存数据库的数据，而AOF文件保存的是服务器执行的写命令。每执行一条写命令，都会添加到AOF文件中，AOF实现可以分为命令追加、文件写入、文件同步三个步骤。服务器结构中有一个AOF缓冲区，命令追加到缓冲区中，Redis默认是每秒将缓冲区中的内容写入文件并进行同步，因为write调用是将内容写入到内核的io缓冲区中并不是马上写入磁盘文件，所以需要同步操作（fsync）来讲io缓冲中的内容写入文件。</p>
+<p>AOF载入时，会先创建一个伪客户端，让这个客户端执行AOF文件中的写命令，从而恢复数据库数据。</p>
+<p>随着写命令的增加，AOF文件可能变得非常庞大，不利于服务器的运行。Redis提供了AOF重写功能，创建一个新的AOF文件，这个文件的数据库状态和旧文件相同，但是没有冗余的写命令，体积小得多。AOF重写不需要分析现有的AOF文件，它是通过读取服务器状态来实现的。原理是读取数据库所有键目前的值，然后只用一条写命令记录键值对，代替多条命令，因此新AOF文件只包含必要的命令，不会浪费任何空间。</p>
+<p>AOF提供了后台重写的功能，创建子进程来重写AOF文件，但是存在一个问题，创建子进程后可能会有新的写命令改变了数据库的状态，导致AOF文件和当前数据库状态不一致，为解决该问题，设置了一个AOF重写缓冲区，创建子进程之后，所有执行的写命令都写到这个缓冲区中，等到子进程完成重写操作向父进程发送信号，父进程将AOF重写缓冲区中的写命令全部写到AOF文件中并同步，如此数据库的状态就一致了。</p>
+<h3 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h3><p>Redis服务器是一个事件驱动型程序，处理两种事件：文件事件和时间事件。文件事件就是和客户端产生的一些网络事件，时间事件是定时的操作。</p>
+<p>Redis基于reactor模式开发了网络事件处理器，处理器采用io复用的方式同时监听多个套接字，根据套接字目前执行的任务来为套接字关联不同的事件处理器，整体是单线程的，保持了Redis内部单线程的简单性。结构如下：<br><img src="https://s1.ax1x.com/2018/07/26/PNwC4I.jpg" alt="PNwC4I.jpg"></p>
+<p>网络事件类型分为可读（客户端发起连接或者write）和可写（客户端read），如果又可读又可写，优先处理可读。最常见的事件处理器是连接应答处理器、命令请求处理器、命令回复处理器。</p>
+<p>时间事件分为定时事件、周期性事件。目前Redis只使用周期性事件。服务器将所有的时间事件都放在一个无序链表中，每次时间事件执行器运行时，遍历这个链表查找已经到达的时间事件调用相应的处理器，正常模式下只有serverCron这一个时间事件。<br>serverCron的主要工作包括：</p>
+<ul>
+<li>更新服务器的各类统计信息，如时间、内存占用、数据库占用等</li>
+<li>清理数据库中的过期键值对</li>
+<li>关闭清理连接失效的客户端</li>
+<li>尝试进行持久化</li>
+<li>若服务器是主服务器，对从服务器进行定期同步</li>
+<li>若处于集群模式，对集群进行定期同步和连接测试<br>默认每隔100毫秒运行一次serverCron。</li>
+</ul>
+<p>服务器事件的调度与执行过程：首先获取距离当前时间最近的时间事件，以这个时间作为io复用的超时时间，然后执行io复用，处理文件事件，然后处理时间事件，伪代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def processEvent():</span><br><span class="line">	time_event = searchNearestTimer()</span><br><span class="line">	time = time_event.when - unix_ts_now()</span><br><span class="line">	poll(time)</span><br><span class="line">	processFileEvents()</span><br><span class="line">	processTimeEvents()</span><br></pre></td></tr></table></figure></p>
+<p>服务器的主函数的伪代码为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">def main():</span><br><span class="line">	# 初始化服务器</span><br><span class="line">	init_server()</span><br><span class="line"></span><br><span class="line">	while server_is_not_shutdown()</span><br><span class="line">		processEvent()</span><br><span class="line"></span><br><span class="line">	# 清理服务器</span><br><span class="line">	clean_server()</span><br></pre></td></tr></table></figure></p>
+<h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><p>客户端包含一些属性，包括：</p>
+<ul>
+<li>套接字描述符</li>
+<li>名字</li>
+<li>标志（记录了客户端的角色和状态）</li>
+<li>输入缓冲区（保存命令）</li>
+<li>命令与命令参数</li>
+<li>命令的实现函数（在命令表中查找对应命令的函数）</li>
+<li>输出缓冲区（保存回复，2个缓冲区，一个大小固定，保存长度较小的回复，一个大小可变，保存长度长的回复）</li>
+<li>身份验证</li>
+<li>创建客户端的时间、客户端与服务器最后一次互动时间、空转时间</li>
+</ul>
+<p>服务器用clients链表连接多个客户端，新客户端放到末尾。缓冲区限制分为硬限制和软限制，一旦缓冲区中的数据长度超过硬限制立即关闭该客户端，若超过软限制且在一段时间内一直超过软限制也将其关闭，若一段时间内没有超过软限制了就不关闭该客户端。</p>
+<h3 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h3><p>命令请求的执行过程：</p>
+<ul>
+<li>发送命令请求</li>
+<li>读取命令请求</li>
+<li>查找命令实现、执行预备操作、调用命令的实现函数、执行后续工作</li>
+<li>将命令回复发送给客户端</li>
+<li>客户端接受并打印回复</li>
+</ul>
+<p>serverCron函数默认每隔100毫秒执行一次，负责管理服务器的资源，所做的工作如下：</p>
+<ul>
+<li>更新服务器的时间缓存，即当前时间</li>
+<li>更新lru时钟</li>
+<li>更新服务器每秒执行次数</li>
+<li>更新服务器内存峰值记录</li>
+<li>处理sigterm信号</li>
+<li>管理客户端资源，调用客户端的clientsCron函数，如果客户端已经超时（空转时间太长）就释放它，若输入缓冲区超过一定长度，释放该缓冲区，重新建立一个默认大小的缓冲区，避免占用太多内存</li>
+<li>管理数据库资源，删除过期键</li>
+<li>执行被延迟的bgrewriteaof</li>
+<li>检查持久化操作的运行状态</li>
+<li>将AOF缓冲区的内容写入文件</li>
+<li>关闭异步客户端</li>
+<li>增加cronloops，代表serverCron运行的次数</li>
+</ul>
+<p>服务器初始化的过程：</p>
+<ul>
+<li>初始化服务器状态结构</li>
+<li>载入配置选项</li>
+<li>初始化服务器数据结构</li>
+<li>还原数据库状态</li>
+<li>执行事件循环</li>
+</ul>
+<h2 id="多机数据库"><a href="#多机数据库" class="headerlink" title="多机数据库"></a>多机数据库</h2><h3 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h3><p>通过slaveof命令让一个服务器（从）复制另一个服务器（主），首先从服务器向主服务器发送sync命令，主服务器向从服务器发送RDB文件，并且在缓冲区中记录下之后执行的命令，从服务器读取RDB文件进行数据库恢复，然后主服务器将缓冲区中的命令发送给从服务器使得状态一致。之后每次写命令改变主服务器时，主服务器都会将命令传播给从服务器。但是当从服务器断线，然后重新上线时，为了恢复主服务器的状态，要重新发送sync命令重新生成RDB文件，这非常耗费时间和资源。为解决这个问题，psync命令可以实现部分同步，只需要将从服务器缺少的命令发送给从服务器。部分同步由三个部分组成：</p>
+<ul>
+<li>复制偏移量，主服务器发送N字节就将自己的复制偏移量加N，从服务器接受N字节就将自己的复制偏移量加N，因此只要主从服务器的复制偏移量不同就说明从服务器掉线了。</li>
+<li>复制积压缓冲区，时一个固定长度的队列，默认大小1m，缓冲区中记录着最近向从服务器传播的写命令，同时记录了每条命令的偏移量，当从服务器故障恢复时把自己的偏移量offset发送给主服务器，如果offset之后的命令都在缓冲区中，就可以将这部分命令发给从服务器完成部分同步，若不存在则进行完全同步。</li>
+<li>服务器运行id，运行id在服务器启动时自动生成，由40个随机的十六进制字符组成，从服务器保存主服务器的运行id，当故障重启时，判断当前连接的主服务器的id和保存的id，如果id一致，说明之前就是连接的这个主服务器，则可以尝试进行部分同步，若id不相同，说明现在已经连接到一个新的主服务器，则进行完全同步。</li>
+</ul>
+<p>复制的实现步骤：</p>
+<ul>
+<li>设置主服务器的地址和端口</li>
+<li>建立套接字连接</li>
+<li>发送ping命令</li>
+<li>身份验证</li>
+<li>发送端口信息</li>
+<li>同步</li>
+<li>命令传播</li>
+</ul>
+<p>此外还有心跳检测用域检测主从服务器的网络连接状态，检测命令丢失，辅助实现min-slave选项。</p>
+<h3 id="sentinel"><a href="#sentinel" class="headerlink" title="sentinel"></a>sentinel</h3><p>sentinel（哨兵）系统可以监视多个主服务器以及所有从服务器，当监视的主服务器下线时，会从它的从服务器中选一个成为新的主服务器接管下线的主服务器，当下线的服务器再次上线时，它会成为新的主服务器的从服务器。</p>
+<p>snetinel会以每秒一次的频率向所有与他建立连接的实例发送ping命令，当主服务器连续50000毫秒都返回无效回复时，sentinel将其标记为主观下线，为了确认这个服务器是否真的下线，它会向其他监视这个服务器的sentinel进行询问，当它收集到足够多的下线判断后，就将服务器判定为客观下线，并进行故障转移。首先挑选出一个状态良好、数据完整的从服务器升级为主服务器（优先级高，复制偏移量最大），让其他从服务器成为新的主服务器的从服务器，让下线的主服务器成为新的主服务器的从服务器。</p>
+<h3 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h3><p>集群由多个节点组成，节点通过cluster meet和其他节点连接起来，一个节点就是一个服务器。</p>
+<p>集群通过分片的方式保存数据库中的键值对，数据库被分为16384个槽，每个键都属于这些槽中的一个，每个节点可以处理0个到16384个槽。</p>
+<p>节点收到一个命令请求时，会先检查这个命令请求的键所在的槽是否指派给自己，如果是就处理，如果不是则返回一个moved错误指引客户端转向负责该槽的节点。</p>
+<p>集群里的从节点用于复制主节点，并在主节点下线时，代替主节点继续处理命令请求。（与sentinel类似）。</p>
+<p>集群中的节点通过发送消息来通信，包括meet、ping、pong、publish、fail。</p>
+<h2 id="发布与订阅"><a href="#发布与订阅" class="headerlink" title="发布与订阅"></a>发布与订阅</h2><p>通过subscribe订阅频道，当客户端向该频道发送消息时（publish），所有订阅该频道的客户端都能接收到消息。</p>
+<p>在服务器中有一个字典记录了对应频道的所有订阅用户：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct redisServer&#123;</span><br><span class="line">	//...</span><br><span class="line">	dict* pubsub_channels;//保存所有频道的订阅关系</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该字典的键是频道，值是一个链表，链表记录了所有订阅这个频道的客户端。</p>
+<p>此外还可以订阅一个模式，相当于订阅了所有与该模式匹配的频道。在服务器中也有一个链表保存所有订阅模式的信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct redisServer&#123;</span><br><span class="line">	//...</span><br><span class="line">	list* pubsub_patterns;//保存所有模式的订阅关系</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>链表每一个节点都是一个pubsubPattern结构：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct pubsubPattern&#123;</span><br><span class="line">	redisClient* client;//订阅的客户端</span><br><span class="line">	robj* pattern;//订阅的模式</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>发布消息时首先找到在字典中找到频道对应的客户端链表，遍历链表将消息发送给所有客户端，然后遍历模式链表，找到一个匹配的模式就将消息发送给订阅该模式的客户端（模式O(n)复杂度，非模式O(1)复杂度）。</p>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>通过multi、exec、watch来实现事务。multi标志一个事务的开始，接下来的命令会进入一个队列不立即执行，等到exec命令，将队列中的命令全部按顺序执行。</p>
+<p>watch是一个乐观锁，可以在exec执行之前，监视任意数量的数据库键，在exec执行时，当至少有一个键已经被修改过了，服务器将拒绝执行事务。数据库中有一个字典用来记录watch的信息，键是watch监视的键，值是一个链表，保存了监视这个键的客户端，当键改变之后，会查找监视这个键的客户端，打开它的REDIS_DIRTY_CAS标志，表明事务安全性已经被破坏，exec执行时首先看客户端有没有REDIS_DIRTY_CAS标志，如果有就拒绝执行事务。</p>
+<p>事务的ACID性质，即原子性，一致性，隔离性，持久性。Redis具有原子、一致、隔离，运行在持久化模式下时具有持久性。</p>
+<p>原子性指的是事务中的操作要么全部执行，要么全部不执行。Redis不支持回滚。</p>
+<p>一致性指的是如果事务在执行事务前是一致的，那么在事务执行后无论事务执行成功与否数据库仍然是一致的。一致指的是数据符合数据库本身的定义和要求，没有包含非法或者无效的错误数据。</p>
+<p>隔离性指的是多个事务并发执行，各个事务之间也不会相互影响。因为Redis总是以串行方式来执行事务，所以有隔离性。</p>
+<p>持久性指的是执行完事务过后，结果已经被保存到硬盘里了。只有运行在AOF的always模式下才具有持久性。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/07/28/redis/" data-id="cjk546ax4000ixpjxh8nhmrzy" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-mvc" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -243,7 +499,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/mvc/" data-id="cjgybwwbd000cq6jxqpjk0mqg" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/mvc/" data-id="cjk546awy000fxpjxs6vh2tcn" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -371,7 +627,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/agen/" data-id="cjgybww9k0000q6jxirhof0lc" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/agen/" data-id="cjk546aw30005xpjx6p0hw6re" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -499,7 +755,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/state/" data-id="cjgybwwca000rq6jxxpo9m0aj" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/state/" data-id="cjk546axm000sxpjxwspy5x5o" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -627,7 +883,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/composite/" data-id="cjgybwwao0004q6jxdb6njazj" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/composite/" data-id="cjk546aw90007xpjx9h3sebi9" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -755,7 +1011,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/iterator/" data-id="cjgybwwb9000aq6jxi3xorc53" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/iterator/" data-id="cjk546awg000axpjxlmj8sci4" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -883,7 +1139,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/template/" data-id="cjgybwwch000uq6jxtm6elrtf" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/template/" data-id="cjk546ay1000zxpjxrap19p7b" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1011,7 +1267,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/show/" data-id="cjgybwwbn000hq6jx75kwltg1" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/show/" data-id="cjk546axd000nxpjxhf78pp1x" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1139,7 +1395,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/adapter/" data-id="cjgybww9y0001q6jxponcpmrx" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/adapter/" data-id="cjk546avn0002xpjx1hu84sak" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1267,135 +1523,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/command/" data-id="cjgybwwac0003q6jxrghgqc4g" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-singleton" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/05/08/singleton/">设计模式之单件模式</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/05/08/singleton/">
-            <time datetime="2018-05-08T23:44:44.000Z" itemprop="datePublished">2018-05-08</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h2 id="单件模式"><a href="#单件模式" class="headerlink" title="单件模式"></a>单件模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>确保一个类只有一个实例，并提供一个全局访问点。</p>
-<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><img src="https://s1.ax1x.com/2018/05/08/CahCGR.jpg" alt="CahCGR.jpg"></p>
-<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">static</span> Singleton* <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (instance == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">			instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"singleton:hello"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Singleton() &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> Singleton* instance;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//线程安全</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">static</span> Singleton* <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (instance == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">			lock.lock();</span><br><span class="line">			instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">			lock.unlock();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"singleton:hello"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Singleton() &#123;&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> Singleton* instance;</span><br><span class="line">	<span class="keyword">static</span> MutexLock lock;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>相当于全局变量，只有一个实例，全局共享，只能通过函数来取得实例，将构造函数声明为私有,有必要的话，将拷贝构造和赋值也声明为私有。</p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2018/05/08/singleton/" data-id="cjgybwwbr000kq6jxmvygsp6n" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/command/" data-id="cjk546auh0000xpjx6vh6tpal" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1489,6 +1617,15 @@
                         
                         <div class="item-inner">
                             <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/07/28/redis/" class="title">Redis简介</a></p>
+                            <p class="item-date"><time datetime="2018-07-28T07:46:32.000Z" itemprop="datePublished">2018-07-28</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
                             <p class="item-title"><a href="/2018/05/08/mvc/" class="title">设计模式之复合模式</a></p>
                             <p class="item-date"><time datetime="2018-05-08T23:51:05.000Z" itemprop="datePublished">2018-05-08</time></p>
                         </div>
@@ -1521,15 +1658,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/05/08/iterator/" class="title">设计模式之迭代器模式</a></p>
-                            <p class="item-date"><time datetime="2018-05-08T23:48:31.000Z" itemprop="datePublished">2018-05-08</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1541,7 +1669,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">3</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">3</span></li></ul>
         </div>
     </div>
 
@@ -1550,7 +1678,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译原理/">编译原理</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络编程/">网络编程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a><span class="tag-list-count">18</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译原理/">编译原理</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络编程/">网络编程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a><span class="tag-list-count">19</span></li></ul>
         </div>
     </div>
 
