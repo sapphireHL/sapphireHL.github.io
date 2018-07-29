@@ -152,7 +152,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                27
+                28
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -181,6 +181,151 @@
 
             
             <section id="main">
+    <article id="post-nginx" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/07/29/nginx/">Nginx简介</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/07/29/nginx/">
+            <time datetime="2018-07-29T12:58:26.000Z" itemprop="datePublished">2018-07-29</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/网络编程/">网络编程</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="Nginx简介"><a href="#Nginx简介" class="headerlink" title="Nginx简介"></a>Nginx简介</h2><p>Nginx是高性能web服务器，使用量排世界第二。一些优点：单次请求更快的响应，高并发情况下更快响应，扩展性好，高可靠性，低内存消耗，单机支持10w以上并发连接，可提供热部署，开源等等。</p>
+<h3 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h3><ul>
+<li>模块化设计，高度模块化，有着抽象简单的接口，非常灵活。</li>
+<li>事件驱动架构，分为事件收集、分发者和各种事件的消费者</li>
+<li>请求的多阶段异步处理，把一个请求分为多个阶段，每次处理只能处理一部分，等下一次epoll循环再继续处理剩余的部分，取决于内核调度，配合事件驱动架构，使得每个进程都全力运转，尽量少出现休眠状况，具体是将阻塞方法分解为多个阶段，用定时器来代替循环检查标志位，若阻塞方法无法划分，用一个单独的进程来执行方法</li>
+<li>管理进程、多工作进程的设计，采用一个master管理进程，多个worker进程的工作方式，master进程监控worker进程，当worker进程出现问题，会启动新的进程避免性能下降，其次，master进程还支持运行时程序升级，配置项的修改等，worker进程间通过进程间通信来进行负载均衡，master进程和worker进程通过unix套接字进行通信</li>
+<li>可移植性</li>
+<li>使用内存池，减少内存碎片，减少内存申请次数，减少cpu消耗。</li>
+</ul>
+<h3 id="worker进程的工作方式"><a href="#worker进程的工作方式" class="headerlink" title="worker进程的工作方式"></a>worker进程的工作方式</h3><p>每个worker进程运行一个epoll事件循环，监听相同的端口，这会带来惊群问题，惊群指的是当新连接到来的时候，会唤醒所有监听端口的子进程，但是最后进行连接的只有最开始accept那个进程，其他进程accept失败继续休眠，这引起了不必要的上下文切换，增加了系统开销。解决方法是一个时刻只让一个进程监听端口，使用accept_mutex锁，监听时首先尝试持有锁，如果失败则不监听，若成功才监听端口，可能这个进程上有很多活跃的连接，可能占用锁很长时间，这样其他进程就不能监听了，nginx提供了2个post队列，一个用来放连接事件，另一个用来放普通读写事件，收到新连接时将连接事件放入连接post队列，接下来先处理连接post队列里面的请求，然后释放锁，再处理正常事件post队列的事件，这样就大大减少了锁的持有时间。</p>
+<p>多个子进程之间还要实现负载均衡。和解决惊群的问题一样，需要accept_mutex锁，同时有一个变量ngx_accept_disabled，它是负载均衡的一个阈值。在启动时，这个阈值是一个负数，值为连接总数的7/8，负数时不会触发负载均衡，正数的时候才会触发负载均衡，当其为正数时，就不再接受新的连接，即是说当前连接使用达到总连接数的7/8时就不再接受新连接，每次循环将这个值减1，直到负数，才会尝试去持有accept_mutex锁处理新连接。伪代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if(ngx_accept_disabled)</span><br><span class="line">	ngx_accept_disabled--;</span><br><span class="line">else&#123;</span><br><span class="line">	if(ngx_trylock_accept_mutex() == NGX_ERROR)</span><br><span class="line">		return;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在一个事件循环中，主要调用ngx_processs_events_and_timers函数，处理网络事件和定时器事件，核心操作有3个：处理网络事件、处理两个post队列中的事件（上文提到）、处理定时器事件。</p>
+<h4 id="epoll的实现结构"><a href="#epoll的实现结构" class="headerlink" title="epoll的实现结构"></a>epoll的实现结构</h4><p>简单提一下epoll的实现，epoll内部有一个红黑树用来保存所有监听的描述符及其对应的事件，和一个链表用来保存所有已经就绪的描述符，epoll_create时创建并初始化这个数据结构，epoll_ctl向红黑树中插入删除查找，效率很高，epoll_wait查看链表，若链表不为空就将链表中的内容从内核空间复制到用户空间。每个事件就绪后会用类似于回调方法的机制将自己添加到队列中，所有整个过程很高效。</p>
+<h4 id="TCP和Nginx"><a href="#TCP和Nginx" class="headerlink" title="TCP和Nginx"></a>TCP和Nginx</h4><p>内核中的TCP和Nginx之间的关系。<br>连接时：<br><img src="https://s1.ax1x.com/2018/07/29/PaKW8J.png" alt="PaKW8J.png"></p>
+<p>发送数据：<br><img src="https://s1.ax1x.com/2018/07/29/PaKb5D.png" alt="PaKb5D.png"></p>
+<p>接受数据：<br><img src="https://s1.ax1x.com/2018/07/29/PaKzrt.png" alt="PaKzrt.png"></p>
+<h3 id="配置项"><a href="#配置项" class="headerlink" title="配置项"></a>配置项</h3><p>Nginx的配置文件大致格式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">http&#123;</span><br><span class="line">	server&#123;</span><br><span class="line">		server_name A;</span><br><span class="line">		listen 80;</span><br><span class="line">		listen 127.0.0.1:8080;</span><br><span class="line"></span><br><span class="line">		location /L1&#123;</span><br><span class="line">			root html;</span><br><span class="line">			...</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		location /L2&#123;</span><br><span class="line">			...</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	server&#123;</span><br><span class="line">		server_name B;</span><br><span class="line">		listen 80;</span><br><span class="line">		listen 127.0.0.1:8000;</span><br><span class="line"></span><br><span class="line">		location /L3&#123;</span><br><span class="line">			...</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		location /L4&#123;</span><br><span class="line">			...</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看出一个配置文件可能有多个server块，server块下有多个location块，代表感兴趣的匹配url地址，每个server块代表了一个服务器，包括监听的端口号，感兴趣的url地址，根目录等。</p>
+<h3 id="upstream"><a href="#upstream" class="headerlink" title="upstream"></a>upstream</h3><p>Nginx通过upstream机制来提供反向代理服务。反向代理时，Nginx作为一个媒介，连接客户端与上游服务器，接受客户端的请求，将请求转发给上游服务器，再将上游服务器的结果转发给客户端。为什么要有这种设计呢？通常客户端与Nginx之前是外网连接，而Nginx和上游是内网连接，内网速度非常快，而外网较慢，利用Nginx的高性能可以尽可能的多处理客户端的请求从而减轻上游服务器的压力，上游服务器可以是Apache、Tomcat、memcached、mysql等。通常下游是HTTP协议，而下游是TCP协议。</p>
+<p>当上下游网速差距不大，或者下游更快时，会开辟一块固定大小的内存，用来接受上游响应，并将其转发给下游，当下游接受速度慢，响应就会堆积在内存中，无法接受上游的响应。</p>
+<p>当上游快于下游时，就要开辟足够的内存缓存来保存上游响应，内存满时还会将响应缓存到磁盘文件中。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/07/29/nginx/" data-id="cjk6uqo2l000eyjjxe74rspe9" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-redis" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -361,7 +506,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/07/28/redis/" data-id="cjk546ax4000ixpjxh8nhmrzy" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/07/28/redis/" data-id="cjk6uqo2u000jyjjxtogwp3ys" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -499,7 +644,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/mvc/" data-id="cjk546awy000fxpjxs6vh2tcn" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/mvc/" data-id="cjk6uqo2q000hyjjxxh168er2" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -627,7 +772,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/agen/" data-id="cjk546aw30005xpjx6p0hw6re" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/agen/" data-id="cjk6uqo1h0002yjjxw95z7kjx" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -755,7 +900,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/state/" data-id="cjk546axm000sxpjxwspy5x5o" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/state/" data-id="cjk6uqo3b000tyjjxs18opjqd" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -883,7 +1028,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/composite/" data-id="cjk546aw90007xpjx9h3sebi9" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/composite/" data-id="cjk6uqo1y0005yjjxots1dzzu" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1011,7 +1156,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/iterator/" data-id="cjk546awg000axpjxlmj8sci4" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/iterator/" data-id="cjk6uqo3l000yyjjx15w5vyw4" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1139,7 +1284,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/template/" data-id="cjk546ay1000zxpjxrap19p7b" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/template/" data-id="cjk6uqo3r0011yjjxm49bko4w" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1267,7 +1412,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/show/" data-id="cjk546axd000nxpjxhf78pp1x" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/show/" data-id="cjk6uqo34000oyjjx46v2m1jv" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1395,135 +1540,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/05/08/adapter/" data-id="cjk546avn0002xpjx1hu84sak" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-command" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/05/08/command/">设计模式之命令模式</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/05/08/command/">
-            <time datetime="2018-05-08T23:45:26.000Z" itemprop="datePublished">2018-05-08</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/设计模式/">设计模式</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h2 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>将请求封装成对象，以便使用不同的请求、队列或者日志来参数化其他对象。命令模式支持可撤销操作。</p>
-<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><p><img src="https://s1.ax1x.com/2018/05/08/CahAsK.jpg" alt="CahAsK.jpg"></p>
-<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Light</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">on</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Light on!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">off</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"light off!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Door</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">open</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Door open!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"Door close!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Command</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">undo</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LightOnCommand</span> :</span><span class="keyword">public</span> Command &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	LightOnCommand(Light* li) :light(li) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		light-&gt;on();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">undo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		light-&gt;off();</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Light* light;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LightOffCommand</span> :</span><span class="keyword">public</span> Command &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	LightOffCommand(Light* li) :light(li) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		light-&gt;off();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">undo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		light-&gt;on();</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Light* light;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DoorOpenCommand</span> :</span><span class="keyword">public</span> Command &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	DoorOpenCommand(Door* doo) :door(doo) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		door-&gt;open();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">undo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		door-&gt;close();</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Door* door;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DoorCloseCommand</span> :</span><span class="keyword">public</span> Command &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	DoorCloseCommand(Door* doo) :door(doo) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		door-&gt;close();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">undo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		door-&gt;open();</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Door* door;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RemoteControl</span> &#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Command* onCommand;</span><br><span class="line">	Command* offCommand;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	RemoteControl() :onCommand(<span class="literal">nullptr</span>), offCommand(<span class="literal">nullptr</span>) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">setCommand</span><span class="params">(Command* onCommand, Command* offCommand)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>-&gt;offCommand = offCommand;</span><br><span class="line">		<span class="keyword">this</span>-&gt;onCommand = onCommand;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">onButtonPushed</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (onCommand) &#123;</span><br><span class="line">			onCommand-&gt;execute();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">offButtonPushed</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (offCommand) &#123;</span><br><span class="line">			offCommand-&gt;execute();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>利用command接口，每个动作都继承这个接口成为一个命令对象，命令对象持有一个执行命令的实体，当该动作执行时，命令对象直接调用执行者的对应动作。有利于动作扩展，新动作只要继承command接口就行。</p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://yoursite.com/2018/05/08/command/" data-id="cjk546auh0000xpjx6vh6tpal" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/05/08/adapter/" data-id="cjk6uqo0y0000yjjx2ugqgrfh" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1617,6 +1634,15 @@
                         
                         <div class="item-inner">
                             <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/07/29/nginx/" class="title">Nginx简介</a></p>
+                            <p class="item-date"><time datetime="2018-07-29T12:58:26.000Z" itemprop="datePublished">2018-07-29</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
                             <p class="item-title"><a href="/2018/07/28/redis/" class="title">Redis简介</a></p>
                             <p class="item-date"><time datetime="2018-07-28T07:46:32.000Z" itemprop="datePublished">2018-07-28</time></p>
                         </div>
@@ -1649,15 +1675,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/05/08/composite/" class="title">设计模式之组合模式</a></p>
-                            <p class="item-date"><time datetime="2018-05-08T23:49:10.000Z" itemprop="datePublished">2018-05-08</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1669,7 +1686,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">3</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">3</span></li></ul>
         </div>
     </div>
 
@@ -1678,7 +1695,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译原理/">编译原理</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络编程/">网络编程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a><span class="tag-list-count">19</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译原理/">编译原理</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络编程/">网络编程</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a><span class="tag-list-count">20</span></li></ul>
         </div>
     </div>
 
