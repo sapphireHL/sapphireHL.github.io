@@ -152,11 +152,11 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                28
+                29
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                7
+                8
                 <span>标签</span>
             </div>
         </div>
@@ -181,6 +181,165 @@
 
             
             <section id="main">
+    <article id="post-读书笔记-Effective-C" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/04/06/读书笔记-Effective-C/">读书笔记 Effective C++</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/04/06/读书笔记-Effective-C/">
+            <time datetime="2018-04-06T08:56:42.000Z" itemprop="datePublished">2018-04-06</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/C/">C++</a>, <a class="tag-link" href="/tags/读书笔记/">读书笔记</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>共有55个法则。</p>
+<h2 id="1、视C-为一个语言联邦"><a href="#1、视C-为一个语言联邦" class="headerlink" title="1、视C++为一个语言联邦"></a>1、视C++为一个语言联邦</h2><p>C++包含多个次语言：</p>
+<ul>
+<li>C</li>
+<li>面向对象</li>
+<li>模板</li>
+<li>STL</li>
+</ul>
+<p>每个次语言都有自己不同的规范。</p>
+<h2 id="2、尽量用const，enum，inline代替-define"><a href="#2、尽量用const，enum，inline代替-define" class="headerlink" title="2、尽量用const，enum，inline代替#define"></a>2、尽量用const，enum，inline代替#define</h2><p>#define宏定义直接被替换掉，因此像<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> NUM 123</span></span><br></pre></td></tr></table></figure></p>
+<p>当程序获得一个编译错误时，不会出现NUM，因为NUM已经被123替换掉了，可能存在多个123，因此就无从得知123对应的是什么意思，用const就不会有这种问题。此外const还可以定义类内的专属常量，比如：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GamePlayer</span>&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> NumTurns = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">int</span> scores[NumTurns];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用enum hack也可以做到这一点：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GamePlayer</span>&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">enum</span> &#123; NumTurns = <span class="number">5</span> &#125;;</span><br><span class="line">    <span class="keyword">int</span> scores[NumTurns];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>enum中的数值可以当作int来使用。<br>这种常量是类内专用的，如果用#define就做不到这一点，因为#define的值是作用到全局的。enum hack的行为更像#define，它们都不能取地址，而const可以取地址。</p>
+<p>对于函数形式的宏，会导致各种各样的问题，最好用inline函数代替。</p>
+<h2 id="3、尽可能使用const"><a href="#3、尽可能使用const" class="headerlink" title="3、尽可能使用const"></a>3、尽可能使用const</h2><p>const修饰的对象不能被改变，编译器会强制实行这个约束。</p>
+<p>const作用于类的成员函数时，不能对成员变量进行修改，但是通过使用mutable关键字的成员变量可以在const成员函数里被改变。</p>
+<p>当const成员函数和non-const成员函数的实现等价时，可以让non-const函数调用const版本避免代码重复，方法是用const_cast去除const属性。如下例：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TextBlock</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>&amp; <span class="keyword">operator</span>[](<span class="built_in">std</span>::<span class="keyword">size_t</span> position) <span class="keyword">const</span></span><br><span class="line">    &#123;</span><br><span class="line">        ...</span><br><span class="line">        ...</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">return</span> text[position];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">char</span>&amp; <span class="keyword">operator</span>[](<span class="built_in">std</span>::<span class="keyword">size_t</span> position)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">const_cast</span>&lt;<span class="keyword">char</span>&amp;&gt;(                         <span class="comment">//去除const属性</span></span><br><span class="line">                <span class="keyword">static_cast</span>&lt;<span class="keyword">const</span> TextBlock&amp;&gt;(*<span class="keyword">this</span>)      <span class="comment">//将*this转为const调用const版本的[]</span></span><br><span class="line">                [position]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="4、确定对象被使用前已先被初始化"><a href="#4、确定对象被使用前已先被初始化" class="headerlink" title="4、确定对象被使用前已先被初始化"></a>4、确定对象被使用前已先被初始化</h2><p>对于内置类型如int、double等，必须手工完成初始化，C++不保证初始化他们。</p>
+<p>对于类类型，构造函数必须保证初始化所有的成员，最好的方式是使用初始化列表而不是在函数体内赋值，初始化列表使用对应参数直接进行拷贝构造，而函数体内赋值则是先经过默认构造函数构造然后再进行赋值，效率较低，且const，引用和没有默认构造函数的类成员只能在初始化列表中进行初始化。</p>
+<p>对于位于多个不同文件中的static对象，为了避免初始化次序带来的问题，如A的初始化依赖于B，而B不保证在A初始化之前进行初始化，可以将static对象放到一个函数里，在函数里声明局部的static对象，返回这个对象的引用，将直接使用static对象改为调用函数来使用static对象，这样就保证static对象在使用时一定已经经过了初始化。如下是一个例子：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FileSystem</span>&#123;</span>...&#125;；</span><br><span class="line"><span class="function">FileSystem&amp; <span class="title">tfs</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> FileSystem fs;</span><br><span class="line">    <span class="keyword">return</span> fs;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Directory</span>&#123;</span>...&#125;;</span><br><span class="line">Directory::Directory(params)&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="built_in">std</span>::<span class="keyword">size_t</span> disks = tfs().numDisks();</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Directory&amp; <span class="title">tempDir</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> Directory td;</span><br><span class="line">    <span class="keyword">return</span> td;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>tfs()函数保证fs对象在使用前已经进行了初始化。</p>
+<h2 id="5、了解C-默默编写并调用哪些函数"><a href="#5、了解C-默默编写并调用哪些函数" class="headerlink" title="5、了解C++默默编写并调用哪些函数"></a>5、了解C++默默编写并调用哪些函数</h2><p>编译器会自动为class创建默认构造函数、拷贝构造函数、赋值操作符、析构函数。只要用户自己声明了一个构造函数，编译器就不会自动创建默认构造函数。<br>如果类成员包含const或者引用，编译器不会自动合成一个赋值操作符，因为const和引用不能赋值，此时需要自己编写赋值操作符。<br>如果基类的赋值操作符是private的，则编译器也不会为其派生类合成赋值操作符。</p>
+<h2 id="6、若不想使用编译器自动生成的函数，就该明确拒绝"><a href="#6、若不想使用编译器自动生成的函数，就该明确拒绝" class="headerlink" title="6、若不想使用编译器自动生成的函数，就该明确拒绝"></a>6、若不想使用编译器自动生成的函数，就该明确拒绝</h2><p>可以将成员函数声明为private的，来阻止编译器的自动合成行为。比如我们不希望一个类进行拷贝或赋值，可以将拷贝构造函数和赋值操作符声明为private，且不给出实现，如此当程序试图拷贝这个类时，编译器会报错，当类的成员函数或友元调用这个函数时，由于没有给出实现，因此连接器会报错。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HomeForSale</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	...	</span><br><span class="line">	HomeForSale(<span class="keyword">const</span> HomeForSale&amp;);</span><br><span class="line">	HomeForSale&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> HomeForSale&amp;); <span class="comment">//只声明不定义</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第二种方法是设计一个不能拷贝的基类，让其余类派生自这个基类，则这些派生类也就不能拷贝了。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Uncopyable</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="comment">//允许构造和析构</span></span><br><span class="line">	Uncopyable();</span><br><span class="line">	~Uncopyable();</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="comment">//不允许拷贝和赋值</span></span><br><span class="line">	Uncopyable(<span class="keyword">const</span> Uncopyable&amp;);</span><br><span class="line">	Uncopyable&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Uncopyable&amp;);</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HomeForSale</span>:</span><span class="keyword">private</span> Uncopyable&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="7、为多态基类声明virtual析构函数"><a href="#7、为多态基类声明virtual析构函数" class="headerlink" title="7、为多态基类声明virtual析构函数"></a>7、为多态基类声明virtual析构函数</h2><p>考虑下面的例子：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TimeKeeper</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	TimeKeeper();</span><br><span class="line">	~TimeKeeper();</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AtomicClock</span>:</span><span class="keyword">public</span> TimerKeeper&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line">TimeKeeper* tk = <span class="keyword">new</span> AtomicClock;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">delete</span> tk;</span><br></pre></td></tr></table></figure></p>
+<p>创建一个基类的指针指向派生类对象，而该指针释放时，却由基类指针进行释放，而且析构函数不是virtual的，因此只有基类的部分进行了析构，而派生类的部分没有得到析构，因此造成了内存泄漏。将基类的析构函数声明为virtual就可解决这个问题。往往一个基类只要包含了其他的virtual函数，它的析构函数也要是virtual的，virtual函数是用来实现多态的，需要用基类的指针指向派生类对象，因此析构函数必须是virtual。若一个基类没有virtual函数，说明这个基类不是用于多态，就不需要virtual析构函数，因为virtual函数带来了额外的vptr的空间开销，因此若不需要多态就不应该将析构函数声明为virtual的。</p>
+<h2 id="8、别让异常逃离析构函数"><a href="#8、别让异常逃离析构函数" class="headerlink" title="8、别让异常逃离析构函数"></a>8、别让异常逃离析构函数</h2><p>只要析构函数抛出异常，程序可能过早结束或者发生不明确的行为。如果某个操作失败时会发生异常，则应该将这个操作移出析构函数放到另外一个函数里面，在析构函数里调用这个函数，此时析构函数应该捕捉任何异常，并且选择吞下它们不进行传播或者结束程序（abort函数）。</p>
+<h2 id="9、绝不在构造和析构过程中调用virtual函数"><a href="#9、绝不在构造和析构过程中调用virtual函数" class="headerlink" title="9、绝不在构造和析构过程中调用virtual函数"></a>9、绝不在构造和析构过程中调用virtual函数</h2><p>在构造和析构过程中调用virtual函数往往不会带来预期的结果。在派生类对象构造时，基类部分会先进行构造，如果基类的构造函数里调用了virtual函数，此时派生类部分还未初始化完成，因此这个函数不会下降到派生类去调用派生类里面的virtual函数，此时virtual函数的行为就像一个non-virtual函数一样，只是调用基类的，另一个根本原因是在派生类的基类部分构造期间，对象的类型就是基类而不是派生类，因此不存在多态。析构函数也一样，派生类优先于基类析构，如果此时析构函数调用了virtual函数，因为派生类部分已经被销毁了，调用派生类的virtual函数也是危险的。</p>
+<h2 id="10、令operator-返回一个reference-to-this"><a href="#10、令operator-返回一个reference-to-this" class="headerlink" title="10、令operator=返回一个reference to *this"></a>10、令operator=返回一个reference to *this</h2><p>为了实现连锁赋值，operator=应该返回一个指向左侧对象的引用。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line">	Widget&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Widget&amp; rhs)&#123;</span><br><span class="line">		...</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="11、在oprator-里处理自我赋值"><a href="#11、在oprator-里处理自我赋值" class="headerlink" title="11、在oprator=里处理自我赋值"></a>11、在oprator=里处理自我赋值</h2><p>由于多个指针或者引用可能指向同一个对象，所以对自我赋值需要特别注意。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span>&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	Bitmap* pb;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	...</span><br><span class="line">	Widget&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Widget&amp; rhs)&#123;</span><br><span class="line">		<span class="keyword">delete</span> pb;</span><br><span class="line">		pb = <span class="keyword">new</span> Bitmap(*rhs.pb);</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>以上的代码未考虑自我赋值情况，如果*this和rhs是同一对象时，第一行的delete就已经将rhs释放掉了。可以加上一个测试以解决自我赋值：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Widget&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Widget&amp; rhs)&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="keyword">this</span> == &amp;rhs) <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	<span class="keyword">delete</span> pb;</span><br><span class="line">	pb = <span class="keyword">new</span> Bitmap(*rhs.pb);</span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但是上面这个版本不具备异常安全，当new抛出异常时，bp指向的对象已经被释放了，所以返回的是一个指向已经被删除的指针，这种指针非常危险，下面是一个异常安全的做法：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Widget&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Widget&amp; rhs)&#123;</span><br><span class="line">	Bitmap* pOrigin = pb;		<span class="comment">//记住原来的pb</span></span><br><span class="line">	pb = <span class="keyword">new</span> Bitmap(*rhs.pb);	<span class="comment">//构造新的pb</span></span><br><span class="line">	<span class="keyword">delete</span> pOrigin;				<span class="comment">//释放旧的pb</span></span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>另一个方案是采用swap and copy：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Widget&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Widget&amp; rhs)&#123;</span><br><span class="line">	Widget temp(rhs);	<span class="comment">//copy rhs</span></span><br><span class="line">	swap(temp);			<span class="comment">//swap</span></span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;		</span><br><span class="line">&#125;<span class="comment">//temp对象析构，此时temp指向的原来的pb，被析构掉了</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="12、复制对象时勿忘其每一个成分"><a href="#12、复制对象时勿忘其每一个成分" class="headerlink" title="12、复制对象时勿忘其每一个成分"></a>12、复制对象时勿忘其每一个成分</h2><p>拷贝构造函数和赋值函数应该确保对每一个成员进行复制，特别是一个派生类的拷贝构造函数应该调用基类的构造函数来复制基类的部分。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span>&#123;</span>...&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span>:</span><span class="keyword">public</span> Base&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Derived(<span class="keyword">const</span> Derived&amp; rhs):Base(rhs)&#123;...&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>拷贝构造函数和赋值函数不应该互相调用对方，如果有相同的操作，应该放到第三个函数中，由两个函数调用。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2018/04/06/读书笔记-Effective-C/" data-id="cjkqlb1wk002q0ljxrf8nfdn3" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-编译原理学习笔记（五）代码生成" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -230,7 +389,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/" data-id="cjk6uqo4d001gyjjxeye08gv7" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/03/17/编译原理学习笔记（五）代码生成/" data-id="cjkqlb1rh001i0ljxi4f5gur4" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -357,7 +516,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/16/编译原理学习笔记（四）语义分析/" data-id="cjk6uqo4f001iyjjx96vi5s6a" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/03/16/编译原理学习笔记（四）语义分析/" data-id="cjkqlb1rx001p0ljx68c35xio" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -492,7 +651,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/14/编译原理学习笔记（三）语法分析/" data-id="cjk6uqo4b001dyjjx14hr5xax" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/03/14/编译原理学习笔记（三）语法分析/" data-id="cjkqlb1re001g0ljxl7kgysw4" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -629,7 +788,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/12/编译原理学习笔记（二）词法分析/" data-id="cjk6uqo84002nyjjx6zslumx9" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/03/12/编译原理学习笔记（二）词法分析/" data-id="cjkqlb1r8001d0ljxik9ezkxm" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -766,7 +925,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/03/11/编译原理学习笔记（一）/" data-id="cjk6uqo6n002lyjjxpgirq1z8" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/03/11/编译原理学习笔记（一）/" data-id="cjkqlb1r2001b0ljxv13z7kiq" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -906,7 +1065,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/02/25/tcp的三次握手和四次挥手/" data-id="cjk6uqo3u0013yjjxyt93dj2y" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/02/25/tcp的三次握手和四次挥手/" data-id="cjkqlb1qn00130ljx19wqkmc2" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1040,7 +1199,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/02/25/select、poll、epoll的比较/" data-id="cjk6uqo31000myjjx8dwo0j2v" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/02/25/select、poll、epoll的比较/" data-id="cjkqlb1pr000o0ljx9shjwkal" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1166,7 +1325,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/02/07/利用hexo和github搭建自己的博客/" data-id="cjk6uqo420018yjjxl6ruib60" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/02/07/利用hexo和github搭建自己的博客/" data-id="cjkqlb1qs00160ljxvd9hajro" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1260,6 +1419,15 @@
                         
                         <div class="item-inner">
                             <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/08/12/tips-md/" class="title">知识汇总</a></p>
+                            <p class="item-date"><time datetime="2018-08-12T08:29:49.000Z" itemprop="datePublished">2018-08-12</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
                             <p class="item-title"><a href="/2018/07/29/nginx/" class="title">Nginx简介</a></p>
                             <p class="item-date"><time datetime="2018-07-29T12:58:26.000Z" itemprop="datePublished">2018-07-29</time></p>
                         </div>
@@ -1292,15 +1460,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/05/08/state/" class="title">设计模式之状态模式</a></p>
-                            <p class="item-date"><time datetime="2018-05-08T23:49:52.000Z" itemprop="datePublished">2018-05-08</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1312,7 +1471,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">3</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">3</span></li></ul>
         </div>
     </div>
 
@@ -1321,7 +1480,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译原理/">编译原理</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络编程/">网络编程</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a><span class="tag-list-count">20</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/知识点/">知识点</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编译原理/">编译原理</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络编程/">网络编程</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a><span class="tag-list-count">20</span></li></ul>
         </div>
     </div>
 
